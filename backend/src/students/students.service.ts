@@ -17,4 +17,23 @@ export class StudentsService {
       data,
     });
   }
+
+  async getStudentById(id: number) {
+  return this.prisma.student.findUnique({
+    where: { id },
+  });
+}
+
+
+  async updateTokens(id: number, change: number) {
+  return this.prisma.student.update({
+    where: { id },
+    data: {
+      tokenRemaining: { increment: change }, // change can be +1 or -1
+      tokenUsed: { increment: 0 }           // or just remove if no change
+    }
+  });
+}
+
+
 }

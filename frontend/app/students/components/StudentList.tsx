@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getStudents } from "../../../lib/api";
-
+import { useRouter } from "next/navigation";
 interface Student {
   id: number;
   name: string;
@@ -16,6 +16,7 @@ interface Student {
 
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     getStudents().then(res => {
@@ -49,7 +50,7 @@ export default function StudentTable() {
         {console.log(students)}
         <tbody className="bg-white divide-y divide-gray-200">
           {students.map(student => (
-            <tr key={student.id} className="hover:bg-gray-50 transition">
+            <tr key={student.id} className="hover:bg-gray-50 transition" onClick={() => router.push(`/students/${student.id}`)}>
               <td className="px-6 py-4 text-sm text-gray-600">{student.id}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-800">{student.name}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.email}</td>
