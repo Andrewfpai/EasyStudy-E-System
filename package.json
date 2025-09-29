@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "tree-cli": "^0.6.7"
+  },
+  "scripts": {
+  "structure": "tree backend frontend -I \"node_modules|.git|dist|.next|coverage\" -a -L 20 --charset ascii > docs/project-structure.md"
+}
+
+
+}
