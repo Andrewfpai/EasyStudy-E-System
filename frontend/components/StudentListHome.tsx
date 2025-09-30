@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { getStudents } from "@/lib/api"
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 interface Student {
   id: number;
   name: string;
@@ -32,7 +33,7 @@ export default function StudentListHome() {
   }, []);
 
   const filteredStudents = students.filter(student =>
-    student.tokenRemaining < Number(tokenCount)
+    student.tokenRemaining <= Number(tokenCount)
   );
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
@@ -43,8 +44,8 @@ export default function StudentListHome() {
       {/* Search input */}
       {/* PAKE DROPDOWN */}
       <input
-        type="string"
-        placeholder="Search by Name, Hanzi, or Pinyin"
+        type="text"
+        placeholder="Search by Token"
         value={tokenCount}
         onChange={(e) => setTokenCount((e.target.value))}
         className="mb-4 px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -57,14 +58,13 @@ export default function StudentListHome() {
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hanzi Name</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Pinyin Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Address</th>
+
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Used</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Remaining</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Joined Date</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Last Updated</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Contact Them</th>
+
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -72,14 +72,12 @@ export default function StudentListHome() {
             <tr
               key={student.id}
               className="hover:bg-gray-50 transition cursor-pointer"
-              onClick={() => router.push(`/students/${student.id}`)}
+              // onClick={() => router.push(`/students/${student.id}`)}
             >
               <td className="px-6 py-4 text-sm text-gray-600">{student.id}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-800">{student.name}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{student.email}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{student.address}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.tokenUsed}</td>
               <td className="px-6 py-4 text-sm text-gray-600">{student.tokenRemaining}</td>
@@ -90,8 +88,13 @@ export default function StudentListHome() {
               }`}>
                 {student.status}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-600">{student.joinedDate}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{student.updatedAt || "-"}</td>
+              <td>
+              <Link href={`https://wa.me/${student.phoneNumber}`}>
+                <button className="px-[20px] ...">Hubungi Kami</button>
+              </Link>
+            </td>
+                
+
             </tr>
           ))}
         </tbody>

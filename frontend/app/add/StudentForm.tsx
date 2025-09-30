@@ -12,7 +12,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
     tokenUsed: 0,
     tokenRemaining: 16,
     status: "ACTIVE" as 'ACTIVE' | 'OUT' | 'TEMP_INACTIVE',
-
+    notes: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,6 +33,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
         phoneNumber: "",
         tokenUsed: 0,
         tokenRemaining: 16,
+        notes:"",
       });
     } catch (error) {
       console.error(error);
@@ -116,6 +117,17 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           className="px-3 py-2 border rounded"
         />
       </div>
+
+      <div className="flex flex-col">
+        <label className="mb-1 font-medium text-gray-700">Notes</label>
+        <textarea
+          value={form.notes || ""}
+          onChange={e => setForm({ ...form, notes: e.target.value })}
+          className="px-3 py-2 border rounded h-24 resize-y"
+          placeholder="Write notes here..."
+        />
+      </div>
+
 
       <button
         type="submit"

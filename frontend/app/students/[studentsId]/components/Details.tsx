@@ -29,12 +29,16 @@ export default function Details({ student: initialStudent }) {
         <h1 className="text-2xl font-bold mb-6">Student Details</h1>
         <div className="space-y-4">
           <p><strong>Name:</strong> {student.name}</p>
+          <p><strong>Hanzi Name:</strong> {student.hanziName}</p>
+          <p><strong>Pinyin Name:</strong> {student.pinyinName}</p>
           <p><strong>Address:</strong> {student.address}</p>
           <p><strong>Phone:</strong> {student.phoneNumber}</p>
           <p><strong>Joined:</strong> {(student.joinedDate)}</p>
           <p><strong>Email:</strong> {student.email}</p>
           <p><strong>Token Used:</strong> {student.tokenUsed}</p>
           <p><strong>Token Remaining:</strong> {student.tokenRemaining}</p>
+          <p className="whitespace-pre-wrap"><strong>Notes:</strong> <br/>{student.notes}</p>
+
         </div>
 
         <div className="mt-6 flex gap-4">

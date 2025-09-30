@@ -27,6 +27,7 @@ model Student {
   tokenRemaining Int
   updatedAt      DateTime?     @updatedAt
   status         StudentStatus @default(ACTIVE)
+  notes          String?
 }
 
 enum StudentStatus {
