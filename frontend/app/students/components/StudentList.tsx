@@ -33,6 +33,19 @@ export default function StudentTable() {
   const [joinedDateOp, setJoinedDateOp] = useState(">");
   const [joinedDateVal, setJoinedDateVal] = useState<string>(""); // store as YYYY-MM-DD
 
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  
+
+
 
   function compare(val: number, op: string, target: number) {
     if (target == null) return true; // no filter applied
@@ -69,6 +82,37 @@ export default function StudentTable() {
     // FINAL SEARCH RESULTS
     return matchesSearch && matchesTokenUsed && matchesTokenRemaining && matchesStatus && matchesJoinedDate;
   });
+
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    if (!sortConfig) return 0;
+
+    let aVal: any = a[sortConfig.key as keyof Student];
+    let bVal: any = b[sortConfig.key as keyof Student];
+
+    // Special case: joinedDate → compare as Date
+    if (sortConfig.key === "joinedDate") {
+      aVal = new Date(aVal);
+      bVal = new Date(bVal);
+    }
+
+    // Special case: id → numeric comparison
+    if (sortConfig.key === "id") {
+      aVal = Number(aVal);
+      bVal = Number(bVal);
+    }
+
+    // Default: string comparison in alphabetical order
+    if (typeof aVal === "string" && typeof bVal === "string") {
+      const comparison = aVal.localeCompare(bVal);
+      return sortConfig.direction === "asc" ? comparison : -comparison;
+    }
+
+    // Fallback for numbers/dates
+    if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
 
 
   useEffect(() => {
@@ -167,22 +211,57 @@ export default function StudentTable() {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hanzi Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Pinyin Name</th>
+            <th
+              onClick={() => requestSort("id")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              ID {sortConfig?.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("name")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Name {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("hanziName")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Hanzi Name {sortConfig?.key === "hanziName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("pinyinName")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Pinyin Name {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Address</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Used</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Remaining</th>
+            <th
+              onClick={() => requestSort("tokenUsed")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Tokens Used {sortConfig?.key === "tokenUsed" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("tokenRemaining")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Tokens Remaining {sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Joined Date</th>
+            <th
+            onClick={() => requestSort("joinedDate")}
+            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+            Joined Date {sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Last Updated</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {filteredStudents.map(student => (
+          {sortedStudents.map(student => (
             <tr
               key={student.id}
               className="hover:bg-gray-50 transition cursor-pointer"
