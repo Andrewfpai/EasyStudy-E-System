@@ -21,17 +21,68 @@ export default function StudentTable() {
   const [search, setSearch] = useState("");
   const router = useRouter();
 
+  const [tokenUsedOp, setTokenUsedOp] = useState(">");
+  const [tokenUsedVal, setTokenUsedVal] = useState<number | null>(null);
+
+  const [tokenRemainingOp, setTokenRemainingOp] = useState(">");
+  const [tokenRemainingVal, setTokenRemainingVal] = useState<number | null>(null);
+
+  const [statusFilter, setStatusFilter] = useState<string[]>([]); 
+  // Example: ["ACTIVE", "TEMP_INACTIVE"]
+
+  const [joinedDateOp, setJoinedDateOp] = useState(">");
+  const [joinedDateVal, setJoinedDateVal] = useState<string>(""); // store as YYYY-MM-DD
+
+
+  function compare(val: number, op: string, target: number) {
+    if (target == null) return true; // no filter applied
+    switch (op) {
+      case ">": return val > target;
+      case "<": return val < target;
+      case "=": return val === target;
+      default: return true;
+    }
+  }
+
+  function compareDate(val: string, op: string, target: string) {
+    if (!target) return true;
+    const v = new Date(val);
+    const t = new Date(target);
+    if (isNaN(v.getTime()) || isNaN(t.getTime())) return true;
+    return op === ">" ? v > t : v < t;
+  }
+
+  const filteredStudents = students.filter(student => {
+    const matchesSearch =
+      student.name.toLowerCase().includes(search.toLowerCase()) ||
+      student.hanziName?.toLowerCase().includes(search.toLowerCase()) ||
+      student.pinyinName?.toLowerCase().includes(search.toLowerCase()) ||
+      String(student.phoneNumber).includes(search);
+
+    const matchesTokenUsed = compare(student.tokenUsed, tokenUsedOp, tokenUsedVal!);
+    const matchesTokenRemaining = compare(student.tokenRemaining, tokenRemainingOp, tokenRemainingVal!);
+
+    const matchesStatus = statusFilter.length === 0 || statusFilter.includes(student.status);
+
+    const matchesJoinedDate = compareDate(student.joinedDate, joinedDateOp, joinedDateVal);
+
+    // FINAL SEARCH RESULTS
+    return matchesSearch && matchesTokenUsed && matchesTokenRemaining && matchesStatus && matchesJoinedDate;
+  });
+
+
   useEffect(() => {
     getStudents().then(res => {
       if (Array.isArray(res.data)) setStudents(res.data);
     });
   }, []);
 
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(search.toLowerCase()) ||
-    student.hanziName?.toLowerCase().includes(search.toLowerCase()) ||
-    student.pinyinName?.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filteredStudents = students.filter(student =>
+  //   student.name.toLowerCase().includes(search.toLowerCase()) ||
+  //   student.hanziName?.toLowerCase().includes(search.toLowerCase()) ||
+  //   student.pinyinName?.toLowerCase().includes(search.toLowerCase()) ||
+  //   student.phoneNumber?.toString()?.includes(search)
+  // );
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
@@ -46,6 +97,72 @@ export default function StudentTable() {
         onChange={(e) => setSearch(e.target.value)}
         className="mb-4 px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+
+      {/* Token Used Filter */}
+      <div className="flex items-center gap-2 mb-2">
+        <label>Token Used:</label>
+        <select value={tokenUsedOp} onChange={(e) => setTokenUsedOp(e.target.value)}>
+          <option value=">">{" > "}</option>
+          <option value="<">{" < "}</option>
+          <option value="=">{" = "}</option>
+        </select>
+        <input
+          type="number"
+          value={tokenUsedVal ?? ""}
+          onChange={(e) => setTokenUsedVal(e.target.value ? parseInt(e.target.value) : null)}
+          className="border px-2 py-1 rounded"
+        />
+      </div>
+
+      {/* Token Remaining Filter */}
+      <div className="flex items-center gap-2 mb-2">
+        <label>Token Remaining:</label>
+        <select value={tokenRemainingOp} onChange={(e) => setTokenRemainingOp(e.target.value)}>
+          <option value=">">{" > "}</option>
+          <option value="<">{" < "}</option>
+          <option value="=">{" = "}</option>
+        </select>
+        <input
+          type="number"
+          value={tokenRemainingVal ?? ""}
+          onChange={(e) => setTokenRemainingVal(e.target.value ? parseInt(e.target.value) : null)}
+          className="border px-2 py-1 rounded"
+        />
+      </div>
+
+      {/* Status Filter */}
+      <div className="flex items-center gap-2 mb-2">
+        <label>Status:</label>
+        {["ACTIVE", "TEMP_INACTIVE", "OUT"].map(s => (
+          <label key={s} className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              checked={statusFilter.includes(s)}
+              onChange={(e) => {
+                if (e.target.checked) setStatusFilter([...statusFilter, s]);
+                else setStatusFilter(statusFilter.filter(st => st !== s));
+              }}
+            />
+            {s}
+          </label>
+        ))}
+      </div>
+
+      {/* Joined Date Filter */}
+      <div className="flex items-center gap-2 mb-2">
+        <label>Joined Date:</label>
+        <select value={joinedDateOp} onChange={(e) => setJoinedDateOp(e.target.value)}>
+          <option value=">">{" > "}</option>
+          <option value="<">{" < "}</option>
+        </select>
+        <input
+          type="date"
+          value={joinedDateVal}
+          onChange={(e) => setJoinedDateVal(e.target.value)}
+          className="border px-2 py-1 rounded"
+        />
+      </div>
+
 
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
