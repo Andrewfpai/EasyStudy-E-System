@@ -48,7 +48,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-gray-700 text-sm text-gray-400">
-        Version 0.4
+        Version 0.5
       </div>
     </aside>
   )

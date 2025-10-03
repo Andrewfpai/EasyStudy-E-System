@@ -21,9 +21,15 @@ export class StudentsController {
     return this.studentsService.createStudent(body);
   }
 
-  @Patch(':id/tokens')
-  async updateTokens(@Param('id') id: string, @Body('change') change: number) {
-    return this.studentsService.updateTokens(+id, change);
+  @Patch(':id')
+  async updateStudentData(@Param('id') id: string, @Body() data: any) {
+    return this.studentsService.updateStudentData(+id, data);
   }
+
+  @Patch(':id/tokens')
+  async updateStudentTokens(@Param('id') id: string, @Body('change') change: number) {
+    return this.studentsService.updateStudentTokens(+id, change);
+  }
+
 
 }

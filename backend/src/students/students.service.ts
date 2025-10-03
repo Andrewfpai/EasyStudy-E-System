@@ -35,32 +35,51 @@ export class StudentsService {
 }
 
 
-  async updateTokens(id: number, change: number) {
-  // let pinyinName: string | undefined;
-
-  // if (data.hanziName) {
-  //     pinyinName = pinyin(data.hanziName, {
-  //       style: pinyin.STYLE_NORMAL,
-  //       heteronym: false,
-  //     })
-  //       .flat()
-  //       .join(' ');
-  //   }
-  //  return this.prisma.student.update({
-  //     where: { id },
-  //     data: {
-  //       ...data,
-  //       ...(pinyinName ? { pinyinName } : {}), // only update if hanzi changed
-  //     },
-  //   });
-   return this.prisma.student.update({
-    where: { id },
-    data: {
-      tokenRemaining: { increment: change }, // change can be +1 or -1
-      tokenUsed: { increment: 0 }           // or just remove if no change
+  async updateStudentData(id: number, data: any) {
+    let pinyinName;
+    if (data.hanziName) {
+      pinyinName = pinyin(data.hanziName, {
+        style: pinyin.STYLE_NORMAL,
+        heteronym: false,
+      }).flat().join(' ');
     }
-  });
-}
+
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        ...data,
+        ...(pinyinName ? { pinyinName } : {}),
+      },
+    });
+  }
+
+  async updateStudentTokens(id: number, change: number) {
+    // let pinyinName: string | undefined;
+
+    // if (data.hanziName) {
+    //     pinyinName = pinyin(data.hanziName, {
+    //       style: pinyin.STYLE_NORMAL,
+    //       heteronym: false,
+    //     })
+    //       .flat()
+    //       .join(' ');
+    //   }
+    //  return this.prisma.student.update({
+    //     where: { id },
+    //     data: {
+    //       ...data,
+    //       ...(pinyinName ? { pinyinName } : {}), // only update if hanzi changed
+    //     },
+    //   });
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        tokenRemaining: { increment: change }, // change can be +1 or -1
+        tokenUsed: { increment: 0 }           // or just remove if no change
+      }
+    });
+  }
+
 
 
 }

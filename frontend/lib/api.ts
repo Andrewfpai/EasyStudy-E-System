@@ -11,6 +11,11 @@ export async function getStudentById(id: string) {
   return res.data;
 }
 
+export async function updateStudentData(id: string, data: Partial<Student>) {
+  const res = await api.patch(`/students/${id}`, data);
+  return res.data;
+}
+
 export async function updateStudentTokens(id: string, change: number) {
   const res = await axios.patch(`http://localhost:3001/students/${id}/tokens`, { change });
   return res.data;
