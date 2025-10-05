@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getStudents, updateStudentTokens } from "@/lib/api"; // import API
+import { getStudents, subtractStudentTokens } from "@/lib/api"; // import API
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -47,17 +47,47 @@ export default function Absensi() {
     }
   };
 
-  async function modifyTokens(type: "add" | "subtract") {
+  async function addTokens() {
     if (!tokenInput || loading) return;
     setLoading(true);
 
     try {
       const updatedStudents = await Promise.all(
         selectedStudents.map(async (student) => {
-          const change = type === "add" ? tokenInput : -tokenInput;
 
           // call backend
-          const updated = await updateStudentTokens(student.id, change);
+          const updated = await addStudentTokens(student.id, tokenInput);
+
+          // return merged updated student
+          return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
+        })
+      );
+
+      // replace updated students in main list
+      setStudents((prev) =>
+        prev.map((student) =>
+          updatedStudents.find((u) => u.id === student.id) || student
+        )
+      );
+
+      setSelectedStudents([]);
+      setTokenInput(null);
+    } catch (err) {
+      console.error("Error updating tokens:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function subtractTokens() {
+    if (!tokenInput || loading) return;
+    setLoading(true);
+
+    try {
+      const updatedStudents = await Promise.all(
+        selectedStudents.map(async (student) => {
+
+          // call backend
+          const updated = await subtractStudentTokens(student.id, -tokenInput);
 
           // return merged updated student
           return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
@@ -80,6 +110,39 @@ export default function Absensi() {
     }
   }
 
+  // async function modifyTokens(type: "add" | "subtract") {
+  //   if (!tokenInput || loading) return;
+  //   setLoading(true);
+
+  //   try {
+  //     const updatedStudents = await Promise.all(
+  //       selectedStudents.map(async (student) => {
+  //         const change = type === "add" ? tokenInput : -tokenInput;
+
+  //         // call backend
+  //         const updated = await updateStudentTokens(student.id, change);
+
+  //         // return merged updated student
+  //         return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
+  //       })
+  //     );
+
+  //     // replace updated students in main list
+  //     setStudents((prev) =>
+  //       prev.map((student) =>
+  //         updatedStudents.find((u) => u.id === student.id) || student
+  //       )
+  //     );
+
+  //     setSelectedStudents([]);
+  //     setTokenInput(null);
+  //   } catch (err) {
+  //     console.error("Error updating tokens:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
   return (
@@ -101,16 +164,16 @@ export default function Absensi() {
           placeholder="Token amount"
           className="border px-2 py-1 rounded w-32"
         />
-        <button
+        {/* <button
           className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => modifyTokens("add")}
+          onClick={() => addTokens()}
           disabled={loading}
         >
           Add Token
-        </button>
+        </button> */}
         <button
           className="bg-red-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => modifyTokens("subtract")}
+          onClick={() => subtractTokens()}
           disabled={loading}
         >
           Subtract Token

@@ -8,8 +8,6 @@ export default function Page() {
  
   return (
     <div className="flex flex-row">
-      <Sidebar/>
-            <div className="mr-72"></div>
 
       <StudentForm/>
     </div>

@@ -34,7 +34,6 @@ export default async function StudentPage({ params }: { params: { studentsId: st
 
   return (
     <div className="flex flex-row w-full">
-      <Sidebar />
       <Details student={student}/> 
     </div>
   );

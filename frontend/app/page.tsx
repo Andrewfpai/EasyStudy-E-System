@@ -1,18 +1,47 @@
 import Absensi from "@/components/Absensi";
 import Sidebar from "@/components/Sidebar";
+// import SidebarWrapper from "@/components/sidebar/SidebarWrapper";
+// import AppSidebar from "@/components/Sidebar2";
+import AppSidebar from "@/components/sidebar/AppSidebar";
 import StudentListHome from "@/components/StudentListHome";
+import {  SidebarTrigger, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex flex-row">
-      <Sidebar/>
-      <div className="mr-72"></div>
+    // <div className="flex flex-row">
+    //   {/* <Sidebar/> */}
+    //   <SidebarWrapper/>
+    //   {/* <div className="mr-72"></div> */}
+    //   {/* <div className="mr-10"></div> */}
 
-      <div className="flex flex-col gap-10">
-        <StudentListHome/>
-        <Absensi/>
-      </div>
-    </div>
+    //   <div className="flex flex-col gap-10">
+    //     <div>HEllo</div>
+    //     <StudentListHome/>
+    //     <Absensi/>
+    //   </div>
+    // </div>
+
+
+      
+
+
+
+        <div>
+          {/* <div>Hello</div> */}
+          <main>
+            <SidebarTrigger/>
+            <StudentListHome/>
+            <Absensi/>
+    
+
+          </main>
+
+        </div>
+
+
+
+
+
   );
 }

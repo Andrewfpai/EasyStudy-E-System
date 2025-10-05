@@ -28,6 +28,36 @@ model Student {
   updatedAt      DateTime?     @updatedAt
   status         StudentStatus @default(ACTIVE)
   notes          String?
+
+  // Relation to payment proofs
+  payments          PaymentProof[]
+  tokenUsageHistory TokenUsedDate[]
+  tokenAddHistory   TokenAddedDate[]
+}
+
+model PaymentProof {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  imageUrl  String // Supabase URL of the uploaded image
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model TokenUsedDate {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model TokenAddedDate {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
 }
 
 enum StudentStatus {

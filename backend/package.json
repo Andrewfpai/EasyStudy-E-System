@@ -25,6 +25,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.16.2",
+    "@supabase/supabase-js": "^2.58.0",
     "pinyin": "^4.0.0",
     "prisma": "^6.16.2",
     "reflect-metadata": "^0.2.2",

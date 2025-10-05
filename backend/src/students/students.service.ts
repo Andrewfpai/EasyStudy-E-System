@@ -7,41 +7,56 @@ import pinyin from 'pinyin';
 export class StudentsService {
   constructor(@Inject('PRISMA') private prisma: PrismaClient) {}
 
-  // Fetch all students
+  // Fetch all students with payments & token usage history
   getAllStudents() {
-    return this.prisma.student.findMany();
-  }
-
-  // Create a new student
-  createStudent(data: any) {
-    const pinyinName = pinyin(data.hanziName, {
-      style:pinyin.STYLE_NORMAL,
-      heteronym: false,
-    })
-      .flat()
-      .join(' ')
-    return this.prisma.student.create({
-      data: {
-        ...data,
-        pinyinName,
+    return this.prisma.student.findMany({
+      include: {
+        payments: true,
+        tokenUsageHistory: {
+          orderBy: { createdAt: 'desc' }, // most recent first
+        },
       },
     });
   }
 
+  // Create a new student
+  createStudent(data: any) {
+    const pinyinName = data.hanziName
+      ? pinyin(data.hanziName, { style: pinyin.STYLE_NORMAL, heteronym: false })
+          .flat()
+          .join(' ')
+      : null;
+
+    return this.prisma.student.create({
+      data: {
+        ...data,
+        ...(pinyinName ? { pinyinName } : {}),
+      },
+    });
+  }
+
+  // Fetch a single student by ID
   async getStudentById(id: number) {
-  return this.prisma.student.findUnique({
-    where: { id },
-  });
-}
+    return this.prisma.student.findUnique({
+      where: { id },
+      include: {
+        payments: true,
+        tokenUsageHistory: { orderBy: { createdAt: 'desc' } },
+        tokenAddHistory: { orderBy: { createdAt: 'desc' } },
+      },
+    });
+  }
 
-
+  // Update student data (name, email, etc.)
   async updateStudentData(id: number, data: any) {
     let pinyinName;
     if (data.hanziName) {
       pinyinName = pinyin(data.hanziName, {
         style: pinyin.STYLE_NORMAL,
         heteronym: false,
-      }).flat().join(' ');
+      })
+        .flat()
+        .join(' ');
     }
 
     return this.prisma.student.update({
@@ -53,33 +68,117 @@ export class StudentsService {
     });
   }
 
-  async updateStudentTokens(id: number, change: number) {
-    // let pinyinName: string | undefined;
+  // Add or subtract tokens and log usage history
+  // async addStudentTokens(id:number, tokenAmount:number){
+  //   // 1. Update tokenRemaining
+  //   const updatedStudent = await this.prisma.student.update({
+  //     where: { id },
+  //     data: {
+  //       tokenRemaining: { increment: tokenAmount },
+  //     },
+  //     include: {
+  //       tokenAddHistory: true,
+  //     },
+  //   });
 
-    // if (data.hanziName) {
-    //     pinyinName = pinyin(data.hanziName, {
-    //       style: pinyin.STYLE_NORMAL,
-    //       heteronym: false,
-    //     })
-    //       .flat()
-    //       .join(' ');
-    //   }
-    //  return this.prisma.student.update({
-    //     where: { id },
-    //     data: {
-    //       ...data,
-    //       ...(pinyinName ? { pinyinName } : {}), // only update if hanzi changed
-    //     },
-    //   });
-    return this.prisma.student.update({
+  //   await this.prisma.tokenAddedDate.create({
+  //       data: { studentId: id },
+  //     });
+
+  //     // Refresh tokenAddHistory to include the new row
+  //     const refreshed = await this.prisma.student.findUnique({
+  //       where: { id },
+  //       include: { tokenAddHistory: { orderBy: { createdAt: 'desc' } } },
+  //     });
+  //     return refreshed;
+
+
+  // }
+  async subtractStudentTokens(id:number, tokenAmount:number){
+    // 1. Update tokenRemaining
+    const updatedStudent = await this.prisma.student.update({
       where: { id },
       data: {
-        tokenRemaining: { increment: change }, // change can be +1 or -1
-        tokenUsed: { increment: 0 }           // or just remove if no change
-      }
+        tokenRemaining: { increment: tokenAmount },
+      },
+      include: {
+        tokenUsageHistory: true,
+      },
     });
+
+    await this.prisma.tokenUsedDate.create({
+        data: { studentId: id },
+      });
+
+      // Refresh tokenUsageHistory to include the new row
+      const refreshed = await this.prisma.student.findUnique({
+        where: { id },
+        include: { tokenUsageHistory: { orderBy: { createdAt: 'desc' } } },
+      });
+      return refreshed;
+
+
   }
 
 
+  // async updateStudentTokens(id: number, change: number) {
+  //   // 1. Update tokenRemaining
+  //   const updatedStudent = await this.prisma.student.update({
+  //     where: { id },
+  //     data: {
+  //       tokenRemaining: { increment: change },
+  //     },
+  //     include: {
+  //       tokenUsageHistory: true,
+  //     },
+  //   });
+
+  //   // 2. Log usage if subtracting tokens
+  //   if (change < 0) {
+  //     await this.prisma.tokenUsedDate.create({
+  //       data: { studentId: id },
+  //     });
+
+  //     // Refresh tokenUsageHistory to include the new row
+  //     const refreshed = await this.prisma.student.findUnique({
+  //       where: { id },
+  //       include: { tokenUsageHistory: { orderBy: { createdAt: 'desc' } } },
+  //     });
+  //     return refreshed;
+  //   }
+
+  //   return updatedStudent;
+  // }
+
+
+  // students.service.ts
+async addTokensWithPayment(studentId: number, tokenAmount: number, paymentUrl?: string) {
+  // 1. Update tokens
+  const updatedStudent = await this.prisma.student.update({
+    where: { id: studentId },
+    data: {
+      tokenRemaining: { increment: tokenAmount },
+    },
+    include: { tokenAddHistory: true, payments: true },
+  });
+
+  // 2. Log token add history
+  await this.prisma.tokenAddedDate.create({
+    data: { studentId },
+  });
+
+  // 3. Create payment proof if provided
+  if (paymentUrl) {
+    await this.prisma.paymentProof.create({
+      data: { studentId, imageUrl: paymentUrl },
+    });
+  }
+
+  // 4. Refresh student to get latest tokenAddHistory & payments
+  return this.prisma.student.findUnique({
+    where: { id: studentId },
+    include: { tokenAddHistory: { orderBy: { createdAt: 'desc' } }, payments: true },
+  });
+}
 
 }

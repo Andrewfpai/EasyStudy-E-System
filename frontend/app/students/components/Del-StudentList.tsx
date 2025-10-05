@@ -15,15 +15,6 @@ interface Student {
   joinedDate: string;
   status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
 }
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -141,7 +132,8 @@ export default function StudentTable() {
 
   console.log("student:",students);
   return (
-    <div>
+    <div className="bg-white rounded-lg shadow-md p-4">
+      {/* Search input */}
       <input
         type="text"
         placeholder="Search by Name, Hanzi, or Pinyin"
@@ -214,78 +206,89 @@ export default function StudentTable() {
           className="border px-2 py-1 rounded"
         />
       </div>
-    
-    <Table className="min-w-full">
-      <TableHeader className="bg-gray-50">
-        <TableRow>
-          <TableHead
-            className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("id")}}
-          >ID {sortConfig?.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead
-            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("name")}}
-          >Name {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead
-            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("hanziName")}}
-          >Hanzi {sortConfig?.key === "hanziName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead
-            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("pinyinName")}}
-          >Pinyin {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Email</TableHead>
-          <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Address</TableHead>
-          <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Phone</TableHead>
-          <TableHead
-            className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("tokenUsed")}}
-          >Tokens Used{sortConfig?.key === "tokenUsed" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead
-            className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("tokenRemaining")}}
-          >Tokens Remaining{sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Status</TableHead>
-          <TableHead
-            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-            onClick={()=>{requestSort("joinedDate")}}
-          >Joined Date{sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-          </TableHead>
-          <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Last Updated</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+
+
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              onClick={() => requestSort("id")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              ID {sortConfig?.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("name")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Name {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("hanziName")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Hanzi Name {sortConfig?.key === "hanziName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("pinyinName")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Pinyin Name {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Address</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
+            <th
+              onClick={() => requestSort("tokenUsed")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Tokens Used {sortConfig?.key === "tokenUsed" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th
+              onClick={() => requestSort("tokenRemaining")}
+              className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+              Tokens Remaining {sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+            <th
+            onClick={() => requestSort("joinedDate")}
+            className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer"
+            >
+            Joined Date {sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Last Updated</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
           {sortedStudents.map(student => (
-          <TableRow 
-            key={student.id}
-            onClick={() => router.push(`/students/${student.id}`)}
-          >
-            <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.email}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600 min-w-[300px] whitespace-normal">{student.address}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenUsed}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
-            <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
+            <tr
+              key={student.id}
+              className="hover:bg-gray-50 transition cursor-pointer"
+              onClick={() => router.push(`/students/${student.id}`)}
+            >
+              <td className="px-6 py-4 text-sm text-gray-600">{student.id}</td>
+              <td className="px-6 py-4 text-sm font-medium text-gray-800">{student.name}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.email}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.address}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.tokenUsed}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.tokenRemaining}</td>
+              <td className={`px-6 py-4 text-sm font-semibold ${
                 student.status === "ACTIVE" ? "text-green-600" :
                 student.status === "OUT" ? "text-red-600" :
                 "text-yellow-600"
-              } min-w-32` }>{student.status}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.joinedDate}</TableCell>
-            <TableCell className="px-6 py-4 text-sm text-gray-600">{student.updateAt || "-"}</TableCell>
-          </TableRow>
+              }`}>
+                {student.status}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.joinedDate}</td>
+              <td className="px-6 py-4 text-sm text-gray-600">{student.updatedAt || "-"}</td>
+            </tr>
           ))}
-      </TableBody>
-    </Table>
+        </tbody>
+      </table>
     </div>
   );
 }

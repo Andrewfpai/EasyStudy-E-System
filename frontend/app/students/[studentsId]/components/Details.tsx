@@ -1,12 +1,30 @@
 "use client"
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import { updateStudentData } from "@/lib/api";
+import { updateStudentData, addTokensWithPayment } from "@/lib/api";
 
 export default function Details({ student: initialStudent }) {
   const [student, setStudent] = useState(initialStudent);
+  const [paymentUrl, setPaymentUrl] = useState("");
   const [editedFields, setEditedFields] = useState<Partial<typeof student>>({});
   const [loading, setLoading] = useState(false);
+  const [tokenInput, setTokenInput] = useState<number | null>(null);
+
+  const STATUS = [
+    {
+      "value":"ACTIVE",
+      "display":"Active"
+    },
+    {
+      "value":"TEMP_INACTIVE",
+      "display":"Temp_inactive"
+    },
+    {
+      "value":"OUT",
+      "display":"out"
+    },
+  ]
+  console.log("student: ",student)
 
   const handleFieldChange = (field: keyof typeof student, value: any) => {
     setStudent(prev => ({ ...prev, [field]: value }));
@@ -19,7 +37,7 @@ export default function Details({ student: initialStudent }) {
     const confirmSave = confirm("Save changes?");
     if (!confirmSave) return;
 
-    console.log("edited Fields", editedFields)
+    // console.log("edited Fields", editedFields)
     setLoading(true);
     try {
       const updated = await updateStudentData(student.id, editedFields);
@@ -34,11 +52,55 @@ export default function Details({ student: initialStudent }) {
     }
   };
 
+  const handleAddTokensWithPayment = async () => {
+  if (!tokenInput || loading) return;
+
+  setLoading(true);
+  try {
+    const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl);
+    setStudent(updated);
+    setTokenInput(null);
+    setPaymentUrl("");
+    alert("Tokens and payment recorded successfully!");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to add tokens/payment.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   const renderField = (label: string, field: keyof typeof student) => (
     <p className="flex items-center gap-2">
       <strong>{label}:</strong>
       <input
         type="text"
+        value={student[field] ?? ""}
+        onChange={(e) => handleFieldChange(field, e.target.value)}
+        className="border px-2 py-1 rounded w-64"
+      />
+      {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
+    </p>
+  );
+
+  const renderFieldDropdown = (label: string, field: keyof typeof student, options: any) => (
+    <p className="flex items-center gap-2">
+      {/* {console.log("options",options)} */}
+      <strong>{label}:</strong>
+      <select value={student[field] ?? ""} onChange={(e) => handleFieldChange(field, e.target.value)}>
+        {options?.map(option=>{
+          return <option key={option.value} value={option.value}>{option.display}</option>
+        })}
+      </select>
+      {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
+    </p>
+  )
+
+  const renderFieldTextArea = (label: string, field: keyof typeof student) => (
+    <p className="flex items-center gap-2">
+      <strong>{label}:</strong>
+      <textarea
         value={student[field] ?? ""}
         onChange={(e) => handleFieldChange(field, e.target.value)}
         className="border px-2 py-1 rounded w-64"
@@ -62,8 +124,52 @@ export default function Details({ student: initialStudent }) {
           {renderField("Phone", "phoneNumber")}
           {renderField("Token Used", "tokenUsed")}
           {renderField("Token Remaining", "tokenRemaining")}
-          {renderField("Status", "status")}
-          {renderField("Notes", "notes")}
+          {renderFieldDropdown("Status", "status", STATUS)}
+          {renderFieldTextArea("Notes", "notes")}
+        </div>
+
+        <div className="mt-4 flex gap-2">
+        <input
+          type="number"
+          value={tokenInput ?? ""}
+          onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
+          placeholder="Token amount"
+          className="border px-2 py-1 rounded w-32"
+        />
+        <input
+          type="text"
+          value={paymentUrl}
+          onChange={e => setPaymentUrl(e.target.value)}
+          placeholder="Payment image URL"
+          className="border px-2 py-1 rounded w-64"
+        />
+        <button
+          className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
+          onClick={handleAddTokensWithPayment}
+          disabled={loading}
+        >
+          Add Token & Payment
+        </button>
+      </div>
+
+
+        <div>
+          <div>TOKEN ADDED HISTORY</div>
+          {student["tokenAddHistory"]?.map(tokenUsage=>(
+            <div key={tokenUsage.id}>{tokenUsage.createdAt}</div>
+          ))}
+        </div>
+        <div>
+          <div>TOKEN USAGE HISTORY</div>
+          {student["tokenUsageHistory"]?.map(tokenUsage=>(
+            <div key={tokenUsage.id}>{tokenUsage.createdAt}</div>
+          ))}
+        </div>
+        <div>
+          <div>PAYMENT HISTORY</div>
+          {student["payments"]?.map(payment=>(
+            <div key={payment.id}>{payment.imageUrl}</div>
+          ))}
         </div>
 
         <div className="mt-6 flex gap-4">
@@ -75,6 +181,8 @@ export default function Details({ student: initialStudent }) {
             Save Changes
           </button>
         </div>
+
+        
       </div>
     </div>
   );

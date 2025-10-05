@@ -36,7 +36,7 @@ export default function Sidebar() {
               All
             </Link>
             <Link
-              href="/add"
+              href="/add-new-student"
               className={`block rounded-md px-3 py-2 ${
                 pathname === "/students/add" ? "bg-gray-700 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white"
               }`}

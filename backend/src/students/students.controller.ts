@@ -26,10 +26,26 @@ export class StudentsController {
     return this.studentsService.updateStudentData(+id, data);
   }
 
-  @Patch(':id/tokens')
-  async updateStudentTokens(@Param('id') id: string, @Body('change') change: number) {
-    return this.studentsService.updateStudentTokens(+id, change);
+  // @Patch(':id/tokens')
+  // async updateStudentTokens(@Param('id') id: string, @Body('change') change: number) {
+  //   return this.studentsService.updateStudentTokens(+id, change);
+  // }
+  // @Patch(':id/add-tokens')
+  // async addStudentTokens(@Param('id') id: string, @Body('tokenAmount') tokenAmount: number) {
+  //   return this.studentsService.addStudentTokens(+id, tokenAmount);
+  // }
+  @Patch(':id/subtract-tokens')
+  async subtractStudentTokens(@Param('id') id: string, @Body('tokenAmount') tokenAmount: number) {
+    return this.studentsService.subtractStudentTokens(+id, tokenAmount);
   }
+
+  @Patch(':id/add-tokens-with-payment')
+async addTokensWithPayment(
+  @Param('id') id: string,
+  @Body() body: { tokenAmount: number; paymentUrl?: string }
+) {
+  return this.studentsService.addTokensWithPayment(+id, body.tokenAmount, body.paymentUrl);
+}
 
 
 }
