@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getStudents, subtractStudentTokens } from "@/lib/api"; // import API
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { formatDate } from "@/utils/date";
 
 interface Student {
   id: number;

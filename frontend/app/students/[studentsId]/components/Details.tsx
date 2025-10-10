@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { updateStudentData, addTokensWithPayment } from "@/lib/api";
+import { formatDate } from "@/utils/date";
 
 export default function Details({ student: initialStudent }) {
   const [student, setStudent] = useState(initialStudent);
@@ -155,14 +156,14 @@ export default function Details({ student: initialStudent }) {
 
         <div>
           <div>TOKEN ADDED HISTORY</div>
-          {student["tokenAddHistory"]?.map(tokenUsage=>(
-            <div key={tokenUsage.id}>{tokenUsage.createdAt}</div>
+          {student["tokenAddHistory"]?.map(tokenAdd=>(
+            <div key={tokenAdd.id}>{formatDate(tokenAdd.createdAt)}</div>
           ))}
         </div>
         <div>
           <div>TOKEN USAGE HISTORY</div>
           {student["tokenUsageHistory"]?.map(tokenUsage=>(
-            <div key={tokenUsage.id}>{tokenUsage.createdAt}</div>
+            <div key={tokenUsage.id}>{formatDate(tokenUsage.createdAt)}</div>
           ))}
         </div>
         <div>
