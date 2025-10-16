@@ -10,7 +10,7 @@ export default function StudentsPage() {
   // const handleStudentAdded = () => setRefresh(prev => prev + 1);
 
   return (
-    <div className="overflow-x-auto">
+    <div className="">
       {/* <StudentForm onStudentAdded={handleStudentAdded} /> */}
       {/* key refresh forces StudentList to reload data */}
       <StudentTable/>
