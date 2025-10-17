@@ -66,6 +66,17 @@ export default function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link
+                                    href="/test"
+                                    >
+                                    Test
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
 
