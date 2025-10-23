@@ -25,6 +25,23 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { formatDateToISO } from "@/utils/date";
+
 export default function StudentTable() {
   const [students, setStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
@@ -44,6 +61,9 @@ export default function StudentTable() {
   const [joinedDateVal, setJoinedDateVal] = useState<string>(""); // store as YYYY-MM-DD
 
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({key:"id", direction:"asc"});
+
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState<Date | undefined>(undefined)
 
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -179,15 +199,19 @@ export default function StudentTable() {
             <div className="flex flex-col gap-2">
               <label className="text-gray-700 font-medium">Token Used</label>
               <div className="flex gap-2">
-                <select
-                  value={tokenUsedOp}
-                  onChange={(e) => setTokenUsedOp(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  <option value=">">{">"}</option>
-                  <option value="<">{"<"}</option>
-                  <option value="=">{"="}</option>
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+                    {tokenUsedOp}
+                    </div>
+                  </DropdownMenuTrigger>
+                   <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setTokenUsedOp(">")}>{">"}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTokenUsedOp("<")}>{"<"}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTokenUsedOp("=")}>{"="}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <input
                   type="number"
                   value={tokenUsedVal ?? ""}
@@ -201,15 +225,19 @@ export default function StudentTable() {
             <div className="flex flex-col gap-2">
               <label className="text-gray-700 font-medium">Token Remaining</label>
               <div className="flex gap-2">
-                <select
-                  value={tokenRemainingOp}
-                  onChange={(e) => setTokenRemainingOp(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  <option value=">">{">"}</option>
-                  <option value="<">{"<"}</option>
-                  <option value="=">{"="}</option>
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+                    {tokenRemainingOp}
+                    </div>
+                  </DropdownMenuTrigger>
+                   <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setTokenRemainingOp(">")}>{">"}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTokenRemainingOp("<")}>{"<"}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTokenRemainingOp("=")}>{"="}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <input
                   type="number"
                   value={tokenRemainingVal ?? ""}
@@ -220,45 +248,75 @@ export default function StudentTable() {
               </div>
             </div>
 
+            
+
             <div className="flex flex-col gap-2">
               <label className="text-gray-700 font-medium">Status</label>
-              <div className="flex gap-3">
-                {["ACTIVE", "TEMP_INACTIVE", "OUT"].map(s => (
-                  <label key={s} className="flex items-center gap-1 text-gray-600 hover:text-gray-800 cursor-pointer">
-                    <input
-                      type="checkbox"
+              <div className="flex gap-4">
+                {["ACTIVE", "TEMP_INACTIVE", "OUT"].map((s) => (
+                  <label
+                    key={s}
+                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                  >
+                    <Checkbox
                       checked={statusFilter.includes(s)}
-                      onChange={(e) => {
-                        if (e.target.checked) setStatusFilter([...statusFilter, s]);
-                        else setStatusFilter(statusFilter.filter(st => st !== s));
+                      onCheckedChange={(checked) => {
+                        if (checked) setStatusFilter([...statusFilter, s])
+                        else setStatusFilter(statusFilter.filter((st) => st !== s))
                       }}
-                      className="w-4 h-4 accent-blue-500"
+                      className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
                     />
-                    {s}
+                    <span>{s}</span>
                   </label>
                 ))}
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-gray-700 font-medium">Joined Date</label>
-              <div className="flex gap-2">
-                <select
-                  value={joinedDateOp}
-                  onChange={(e) => setJoinedDateOp(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                >
-                  <option value=">">{"after"}</option>
-                  <option value="<">{"before"}</option>
-                </select>
-                <input
-                  type="date"
-                  value={joinedDateVal}
-                  onChange={(e) => setJoinedDateVal(e.target.value)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
+
+          <div className="flex flex-col gap-2">
+            <label className="text-gray-700 font-medium">Joined Date</label>
+            <div className="grid gap-2 grid-cols-5">
+              <div className="col-span-2 ">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="w-full flex border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                      {joinedDateOp === ">" ? "After" : "Before"}
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setJoinedDateOp(">")}>After</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setJoinedDateOp("<")}>Before</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
+
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    className="col-span-3 flex items-center justify-between border border-gray-300 rounded-md px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    {joinedDateVal ? joinedDateVal : "Pick a date"}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(selectedDate) => {
+                      if (selectedDate) {
+                        setDate(selectedDate);
+                        console.log(selectedDate)
+                        const formatted = formatDateToISO(selectedDate)
+                        setJoinedDateVal(formatted);
+                        setOpen(false);
+                      }
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
+          </div>
+
 
           </div>
 

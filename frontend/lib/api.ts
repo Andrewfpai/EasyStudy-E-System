@@ -2,7 +2,7 @@ import axios from "axios";
 
 const api = axios.create({
   // baseURL: "http://localhost:5000", // your dev laptop IP
-  baseURL: "http://192.168.122.217:5000", // your dev laptop IP
+  baseURL: "http://192.168.8.217:5000", // your dev laptop IP
   // baseURL: "http://localhost:3001", // your dev laptop IP
 });
 
