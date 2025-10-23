@@ -17,7 +17,17 @@ interface Student {
   tokenRemaining: number;
   joinedDate: string;
   status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
+  updatedAt: string;
 }
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 export default function Absensi() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -25,7 +35,19 @@ export default function Absensi() {
   const [search, setSearch] = useState("");
   const [tokenInput, setTokenInput] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({
+    key: "updatedAt",
+    direction: "desc", // most recent first
+    });
+
+  const sortedStudents = [...students].sort((a, b) => {
+    const aTime = new Date(a.updatedAt || 0).getTime();
+    const bTime = new Date(b.updatedAt || 0).getTime();
+    return bTime - aTime; // newest first
+  });
+
+
 
   useEffect(() => {
     getStudents().then(res => {
@@ -33,12 +55,7 @@ export default function Absensi() {
     });
   }, []);
 
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(search.toLowerCase()) ||
-    student.hanziName?.toLowerCase().includes(search.toLowerCase()) ||
-    student.pinyinName?.toLowerCase().includes(search.toLowerCase()) ||
-    String(student.phoneNumber).includes(search)
-  );
+  
 
   const toggleSelect = (student: Student) => {
     if (selectedStudents.find(s => s.id === student.id)) {
@@ -48,37 +65,6 @@ export default function Absensi() {
     }
   };
 
-  async function addTokens() {
-    if (!tokenInput || loading) return;
-    setLoading(true);
-
-    try {
-      const updatedStudents = await Promise.all(
-        selectedStudents.map(async (student) => {
-
-          // call backend
-          const updated = await addStudentTokens(student.id, tokenInput);
-
-          // return merged updated student
-          return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
-        })
-      );
-
-      // replace updated students in main list
-      setStudents((prev) =>
-        prev.map((student) =>
-          updatedStudents.find((u) => u.id === student.id) || student
-        )
-      );
-
-      setSelectedStudents([]);
-      setTokenInput(null);
-    } catch (err) {
-      console.error("Error updating tokens:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
   async function subtractTokens() {
     if (!tokenInput || loading) return;
     setLoading(true);
@@ -111,117 +97,113 @@ export default function Absensi() {
     }
   }
 
-  // async function modifyTokens(type: "add" | "subtract") {
-  //   if (!tokenInput || loading) return;
-  //   setLoading(true);
-
-  //   try {
-  //     const updatedStudents = await Promise.all(
-  //       selectedStudents.map(async (student) => {
-  //         const change = type === "add" ? tokenInput : -tokenInput;
-
-  //         // call backend
-  //         const updated = await updateStudentTokens(student.id, change);
-
-  //         // return merged updated student
-  //         return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
-  //       })
-  //     );
-
-  //     // replace updated students in main list
-  //     setStudents((prev) =>
-  //       prev.map((student) =>
-  //         updatedStudents.find((u) => u.id === student.id) || student
-  //       )
-  //     );
-
-  //     setSelectedStudents([]);
-  //     setTokenInput(null);
-  //   } catch (err) {
-  //     console.error("Error updating tokens:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <input
-        type="text"
-        placeholder="Search by Name, Hanzi, or Pinyin"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="mb-4 px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4">
+      <div className="flex flex-col px-6">
+        <div className="font-bold text-2xl">Student Attendance</div>
+        
+        <div className="grid grid-cols-5 gap-5 mt-5">
+          <input
+            type="text"
+            placeholder="Search by Name, Hanzi, or Pinyin"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="px-4 py-2 col-span-3 border border-gray-400 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-      {/* Bulk Token Controls */}
-      <div className="flex items-center gap-2 mb-4">
-        <input
-          type="number"
-          value={tokenInput ?? ""}
-          onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
-          placeholder="Token amount"
-          className="border px-2 py-1 rounded w-32"
-        />
-        {/* <button
-          className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => addTokens()}
-          disabled={loading}
-        >
-          Add Token
-        </button> */}
-        <button
-          className="bg-red-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={() => subtractTokens()}
-          disabled={loading}
-        >
-          Subtract Token
-        </button>
+          {/* Token Controls */}
+          <div className="grid grid-cols-4 col-span-2 flex items-center gap-2">
+            <input
+              type="number"
+              value={tokenInput ?? ""}
+              onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
+              placeholder="Token amount"
+              className="px-4 py-2 col-span-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              className="bg-red-500 col-span-2 text-white px-4 py-1 rounded disabled:opacity-50"
+              onClick={() => subtractTokens()}
+              disabled={loading}
+            >
+              Subtract Token
+            </button>
+          </div>
+
+        </div>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Select</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hanzi Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Pinyin Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Phone</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Used</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Tokens Remaining</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {filteredStudents.map(student => {
-            const isSelected = selectedStudents.some(s => s.id === student.id);
-            return (
-              <tr key={student.id} className="hover:bg-gray-50 transition">
-                <td className="px-4 py-4">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleSelect(student)}
-                  />
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-800">{student.name}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{student.tokenUsed}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{student.tokenRemaining}</td>
-                <td className={`px-6 py-4 text-sm font-semibold ${
-                  student.status === "ACTIVE" ? "text-green-600" :
-                  student.status === "OUT" ? "text-red-600" :
-                  "text-yellow-600"
-                }`}>{student.status}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="overflow-auto border bg-gray-100 flex-1 mt-5">
+        <div className="max-w-vw overflow-auto max-h-[500px] rounded-md">
+          <Table className="w-full bg-white">
+            <TableHeader className="bg-gray-100">
+              <TableRow>
+                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Select</TableHead>
+                <TableHead
+                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                  
+                >ID
+                </TableHead>
+                <TableHead
+                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  
+                >Name 
+                </TableHead>
+                <TableHead
+                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                 
+                >Hanzi 
+                </TableHead>
+                <TableHead
+                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  
+                >Pinyin 
+                </TableHead>
+                
+                <TableHead
+                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                  
+                >Tokens Remaining
+                </TableHead>
+                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Status</TableHead>
+                
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+                {sortedStudents.map(student => {
+                  const isSelected = selectedStudents.some(s => s.id === student.id);
+                  return (
+                <TableRow 
+                  key={student.id}
+                  // onClick={() => router.push(`/students/${student.id}`)}
+                >
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelect(student)}
+                    />
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
+                  <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
+                    student.status === "ACTIVE" ? "text-green-600" :
+                    student.status === "OUT" ? "text-red-600" :
+                    "text-yellow-600"
+                  } min-w-32` }>{student.status}</TableCell>
+                </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      
     </div>
   );
 }

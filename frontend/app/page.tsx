@@ -21,23 +21,25 @@ export default function Home() {
     //     <Absensi/>
     //   </div>
     // </div>
+        <div className="flex flex-col ml-8 mt-4">
+        
+            <div className="flex flex-row gap-2 items-center mb-4">
+                <SidebarTrigger className="py-2 -ml-2"/>
+                <div className="w-px h-5 bg-gray-300 mx-2"></div>
+                <div className="font-semibold text-lg">Dashboard</div>
+            </div>
 
+            <StudentListHome/>
+            <Absensi/>
+          
+    
+        </div>
 
       
 
 
 
-        <div>
-          {/* <div>Hello</div> */}
-          <main>
-            <SidebarTrigger/>
-            <StudentListHome/>
-            <Absensi/>
-    
-
-          </main>
-
-        </div>
+       
 
 
 

@@ -31,6 +31,7 @@ export class StudentsService {
       data: {
         ...data,
         ...(pinyinName ? { pinyinName } : {}),
+        joinedDate: data.joinedDate ? new Date(data.joinedDate) : undefined,
       },
     });
   }

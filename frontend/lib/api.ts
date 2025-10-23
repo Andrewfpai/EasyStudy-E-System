@@ -27,11 +27,11 @@ export async function updateStudentData(id: string, data: Partial<Student>) {
 //   return res.data;
 // }
 export async function subtractStudentTokens(id: string, tokenAmount: number) {
-  const res = await axios.patch(`http://localhost:3001/students/${id}/subtract-tokens`, { tokenAmount });
+  const res = await api.patch(`/students/${id}/subtract-tokens`, { tokenAmount });
   return res.data;
 }
 export async function addTokensWithPayment(id: string, tokenAmount: number, paymentUrl:string) {
-  const res = await axios.patch(`http://localhost:3001/students/${id}/add-tokens-with-payment`, { tokenAmount,paymentUrl});
+  const res = await api.patch(`/students/${id}/add-tokens-with-payment`, { tokenAmount,paymentUrl});
   return res.data;
 }
 // console.log("getStudents",getStudents)

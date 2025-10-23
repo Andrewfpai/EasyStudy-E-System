@@ -1,6 +1,5 @@
 "use client"
 import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
 import { updateStudentData, addTokensWithPayment } from "@/lib/api";
 import { formatDate } from "@/utils/date";
 
@@ -112,7 +111,7 @@ export default function Details({ student: initialStudent }) {
 
   return (
     <div className="flex flex-row w-full">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className="mr-72"></div>
       <div className="flex-1 p-8">
         <h1 className="text-2xl font-bold mb-6">Student Details</h1>

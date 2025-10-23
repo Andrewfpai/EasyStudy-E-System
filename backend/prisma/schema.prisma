@@ -23,7 +23,7 @@ model Student {
   email          String        @unique
   address        String
   joinedDate     DateTime      @default(now())
-  tokenUsed      Int
+  tokenUsed      Int           @default(0)
   tokenRemaining Int
   updatedAt      DateTime?     @updatedAt
   status         StudentStatus @default(ACTIVE)
