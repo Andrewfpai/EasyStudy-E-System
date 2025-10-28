@@ -1,5 +1,4 @@
-import Absensi from "@/components/Absensi";
-import Sidebar from "@/components/Sidebar";
+
 // import SidebarWrapper from "@/components/sidebar/SidebarWrapper";
 // import AppSidebar from "@/components/Sidebar2";
 import AppSidebar from "@/components/sidebar/AppSidebar";
@@ -30,7 +29,7 @@ export default function Home() {
             </div>
 
             <StudentListHome/>
-            <Absensi/>
+
           
     
         </div>

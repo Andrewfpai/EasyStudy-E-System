@@ -1,189 +1,92 @@
 "use client"
 import { useState } from "react";
 import { updateStudentData, addTokensWithPayment } from "@/lib/api";
-import { formatDate } from "@/utils/date";
+import { formatDate, formatDateToISO, formatForDisplay } from "@/utils/date";
+import Link from "next/link"
 
 export default function Details({ student: initialStudent }) {
   const [student, setStudent] = useState(initialStudent);
-  const [paymentUrl, setPaymentUrl] = useState("");
-  const [editedFields, setEditedFields] = useState<Partial<typeof student>>({});
-  const [loading, setLoading] = useState(false);
-  const [tokenInput, setTokenInput] = useState<number | null>(null);
-
-  const STATUS = [
-    {
-      "value":"ACTIVE",
-      "display":"Active"
-    },
-    {
-      "value":"TEMP_INACTIVE",
-      "display":"Temp_inactive"
-    },
-    {
-      "value":"OUT",
-      "display":"out"
-    },
-  ]
+ 
   console.log("student: ",student)
 
-  const handleFieldChange = (field: keyof typeof student, value: any) => {
-    setStudent(prev => ({ ...prev, [field]: value }));
-    setEditedFields(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSave = async () => {
-    if (!Object.keys(editedFields).length) return;
-
-    const confirmSave = confirm("Save changes?");
-    if (!confirmSave) return;
-
-    // console.log("edited Fields", editedFields)
-    setLoading(true);
-    try {
-      const updated = await updateStudentData(student.id, editedFields);
-      setStudent(updated);
-      setEditedFields({});
-      alert("Changes saved successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save changes.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddTokensWithPayment = async () => {
-  if (!tokenInput || loading) return;
-
-  setLoading(true);
-  try {
-    const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl);
-    setStudent(updated);
-    setTokenInput(null);
-    setPaymentUrl("");
-    alert("Tokens and payment recorded successfully!");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to add tokens/payment.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  const renderField = (label: string, field: keyof typeof student) => (
-    <p className="flex items-center gap-2">
-      <strong>{label}:</strong>
-      <input
-        type="text"
-        value={student[field] ?? ""}
-        onChange={(e) => handleFieldChange(field, e.target.value)}
-        className="border px-2 py-1 rounded w-64"
-      />
-      {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
-    </p>
-  );
-
-  const renderFieldDropdown = (label: string, field: keyof typeof student, options: any) => (
-    <p className="flex items-center gap-2">
-      {/* {console.log("options",options)} */}
-      <strong>{label}:</strong>
-      <select value={student[field] ?? ""} onChange={(e) => handleFieldChange(field, e.target.value)}>
-        {options?.map(option=>{
-          return <option key={option.value} value={option.value}>{option.display}</option>
-        })}
-      </select>
-      {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
-    </p>
-  )
-
-  const renderFieldTextArea = (label: string, field: keyof typeof student) => (
-    <p className="flex items-center gap-2">
-      <strong>{label}:</strong>
-      <textarea
-        value={student[field] ?? ""}
-        onChange={(e) => handleFieldChange(field, e.target.value)}
-        className="border px-2 py-1 rounded w-64"
-      />
-      {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
-    </p>
-  );
 
   return (
-    <div className="flex flex-row w-full">
-      {/* <Sidebar /> */}
-      <div className="mr-72"></div>
-      <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-6">Student Details</h1>
-        <div className="space-y-4">
-          {renderField("Name", "name")}
-          {renderField("Hanzi Name", "hanziName")}
-          {renderField("Pinyin Name", "pinyinName")}
-          {renderField("Email", "email")}
-          {renderField("Address", "address")}
-          {renderField("Phone", "phoneNumber")}
-          {renderField("Token Used", "tokenUsed")}
-          {renderField("Token Remaining", "tokenRemaining")}
-          {renderFieldDropdown("Status", "status", STATUS)}
-          {renderFieldTextArea("Notes", "notes")}
-        </div>
+    <div className="flex flex-col w-full">
+      
+      
 
-        <div className="mt-4 flex gap-2">
-        <input
-          type="number"
-          value={tokenInput ?? ""}
-          onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
-          placeholder="Token amount"
-          className="border px-2 py-1 rounded w-32"
-        />
-        <input
-          type="text"
-          value={paymentUrl}
-          onChange={e => setPaymentUrl(e.target.value)}
-          placeholder="Payment image URL"
-          className="border px-2 py-1 rounded w-64"
-        />
-        <button
-          className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={handleAddTokensWithPayment}
-          disabled={loading}
-        >
-          Add Token & Payment
-        </button>
+      <div className="flex flex-col bg-gray-100 rounded-lg border border-gray-200 py-4 mt-8">
+        <div className="font-semibold text-xl px-6">Personal Details</div>
+
+        <div className="grid grid-rows-2 border-t border-gray-400 mt-4 mt-3 col-span-2 " ></div>
+
+          <div className="flex flex-col divide-y-2 divide-dashed divide-gray-200">
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="">{`Name(ID):`}</p>
+              <p className="font-medium col-start-2 col-span-full">{`${student.name}(${student.id})`}</p>
+            </div>
+            {/* <div className=" divide-y-3 divide-dashed divide-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="">{`Chinese Name:`}</p>
+              <p className="font-medium col-start-2 col-span-full">{`${student.hanziName}(${student.pinyinName})`}</p>
+            </div>
+            {/* <div className="border-t border-dashed border-gray-400 my-3 col-span-2"></div> */}
+
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="">Email:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.email}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="">Phone:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.phoneNumber}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Address:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.address}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Tokens Used:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.tokenUsed}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Tokens Remaining:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.tokenRemaining}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Joined Date:</p>
+              <p className="font-medium col-start-2 col-span-full">{formatForDisplay(student.joinedDate)?.date}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Status:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.status}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+            <div className="grid grid-cols-4 px-6 py-3">
+              <p className="col-span-1">Notes:</p>
+              <p className="font-medium col-start-2 col-span-full">{student.notes}</p>
+            </div>
+            {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
+            
+          </div>
+
+
+
       </div>
-
-
-        <div>
-          <div>TOKEN ADDED HISTORY</div>
-          {student["tokenAddHistory"]?.map(tokenAdd=>(
-            <div key={tokenAdd.id}>{formatDate(tokenAdd.createdAt)}</div>
-          ))}
-        </div>
-        <div>
-          <div>TOKEN USAGE HISTORY</div>
-          {student["tokenUsageHistory"]?.map(tokenUsage=>(
-            <div key={tokenUsage.id}>{formatDate(tokenUsage.createdAt)}</div>
-          ))}
-        </div>
-        <div>
-          <div>PAYMENT HISTORY</div>
-          {student["payments"]?.map(payment=>(
-            <div key={payment.id}>{payment.imageUrl}</div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex gap-4">
-          <button
-            onClick={handleSave}
-            disabled={loading || !Object.keys(editedFields).length}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-          >
-            Save Changes
-          </button>
-        </div>
-
-        
-      </div>
+      
     </div>
   );
 }

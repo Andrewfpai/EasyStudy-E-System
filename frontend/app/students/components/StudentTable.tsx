@@ -42,8 +42,8 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { formatDateToISO } from "@/utils/date";
 
-export default function StudentTable() {
-  const [students, setStudents] = useState<Student[]>([]);
+export default function StudentTable({studentsInput}) {
+  const [students, setStudents] = useState<Student[]>(studentsInput);
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const router = useRouter();
@@ -145,11 +145,11 @@ export default function StudentTable() {
 
 
 
-  useEffect(() => {
-    getStudents().then(res => {
-      if (Array.isArray(res.data)) setStudents(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getStudents().then(res => {
+  //     if (Array.isArray(res.data)) setStudents(res.data);
+  //   });
+  // }, []);
 
   const resetFilters = () => {
     setTokenUsedOp(">");

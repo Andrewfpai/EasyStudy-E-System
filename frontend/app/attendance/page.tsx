@@ -1,17 +1,15 @@
+"use client";
 
+import { useState } from "react";
 // import StudentList from "./components/StudentList";
 // import StudentForm from "./components/StudentForm";
-import StudentsPage from "./students";
+
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { getStudents } from "@/lib/api";
-import StudentTable from "./components/StudentTable";
+import Absensi from "./Absensi";
 
-export default async function Page() {
-
-  const student = await getStudents();
-
+export default function Page() {
  
   return (
     <div className="flex flex-col ml-8 mt-4">
@@ -21,8 +19,8 @@ export default async function Page() {
             <div className="w-px h-5 bg-gray-300 mx-2"></div>
             <div className="font-semibold text-lg">Students Database</div>
         </div>
-            <StudentTable studentsInput={student?.data}/>
-     
+          
+        <Absensi/>
 
     </div>
   );

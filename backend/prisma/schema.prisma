@@ -45,19 +45,20 @@ model PaymentProof {
 }
 
 model TokenUsedDate {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  createdAt   DateTime @default(now())
+  tokenAmount Int?
 
   student Student @relation(fields: [studentId], references: [id])
 }
 
 model TokenAddedDate {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  createdAt DateTime @default(now())
-
-  student Student @relation(fields: [studentId], references: [id])
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  createdAt   DateTime @default(now())
+  tokenAmount Int?
+  student     Student  @relation(fields: [studentId], references: [id])
 }
 
 enum StudentStatus {

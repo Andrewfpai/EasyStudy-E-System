@@ -108,7 +108,7 @@ export class StudentsService {
     });
 
     await this.prisma.tokenUsedDate.create({
-        data: { studentId: id },
+        data: { studentId: id, tokenAmount },
       });
 
       // Refresh tokenUsageHistory to include the new row
@@ -165,7 +165,7 @@ async addTokensWithPayment(studentId: number, tokenAmount: number, paymentUrl?: 
 
   // 2. Log token add history
   await this.prisma.tokenAddedDate.create({
-    data: { studentId },
+    data: { studentId, tokenAmount },
   });
 
   // 3. Create payment proof if provided

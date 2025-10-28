@@ -66,7 +66,7 @@ export default function AppSidebar() {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
-                        <SidebarMenu>
+                        {/* <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <Link
@@ -76,7 +76,26 @@ export default function AppSidebar() {
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
+                        </SidebarMenu> */}
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarGroup>
+                    <SidebarGroupLabel>Token Management</SidebarGroupLabel>
+                    <SidebarSeparator/>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild isActive>
+                                    <Link
+                                    href="/attendance"
+                                    >
+                                    Student Attendance
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
                         </SidebarMenu>
+                        
                     </SidebarGroupContent>
                 </SidebarGroup>
 

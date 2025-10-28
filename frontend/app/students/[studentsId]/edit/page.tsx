@@ -1,18 +1,22 @@
 
+
+
 // import StudentList from "./components/StudentList";
 // import StudentForm from "./components/StudentForm";
-import StudentsPage from "./students";
+
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { getStudents } from "@/lib/api";
-import StudentTable from "./components/StudentTable";
 
-export default async function Page() {
+import Info from "./Info";
+import { getStudentById } from "@/lib/api";
 
-  const student = await getStudents();
 
+export default async function Page({ params }: { params: { studentsId: string } }) {
  
+    const resolvedParams = await params;
+    const studentId = parseInt(resolvedParams.studentsId, 10);
+    const student = await getStudentById(studentId);
   return (
     <div className="flex flex-col ml-8 mt-4">
 
@@ -21,8 +25,8 @@ export default async function Page() {
             <div className="w-px h-5 bg-gray-300 mx-2"></div>
             <div className="font-semibold text-lg">Students Database</div>
         </div>
-            <StudentTable studentsInput={student?.data}/>
-     
+          
+            <Info student={student}/>
 
     </div>
   );

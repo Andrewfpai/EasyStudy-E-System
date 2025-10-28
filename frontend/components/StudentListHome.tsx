@@ -48,7 +48,6 @@ export default function StudentListHome() {
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({key:"id", direction:"asc"});
 
   // const [search, setSearch] = useState(3);
-  const router = useRouter();
 
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -97,24 +96,6 @@ export default function StudentListHome() {
     });
   }, []);
 
-  function compare(val: number, op: string, target: number) {
-    if (target == null) return true; // no filter applied
-    switch (op) {
-      case ">": return val > target;
-      case "<": return val < target;
-      case "=": return val === target;
-      default: return true;
-    }
-  }
-
-
-  const filteredStudents = students.filter(student =>{
-    const matchesTokenRemaining = compare(student.tokenRemaining, tokenRemainingOp, tokenRemainingVal!);
-    const matchesStatus = statusFilter.length === 0 || statusFilter.includes(student.status);
-    return matchesTokenRemaining && matchesStatus;
-  }
-    // student.tokenRemaining <= Number(tokenCount)
-  );
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
@@ -234,7 +215,7 @@ export default function StudentListHome() {
                   } min-w-32` }>{student.status}</TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
                     <Link href={`https://wa.me/${student.phoneNumber}`}>
-                      <button className="px-[20px] ...">Hubungi Kami</button>
+                      <button className="px-[20px] ...">Hubungi Murid</button>
                     </Link>
                   </TableCell>
                 </TableRow>
