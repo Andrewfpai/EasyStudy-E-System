@@ -29,8 +29,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function Absensi() {
-  const [students, setStudents] = useState<Student[]>([]);
+export default function Absensi({studentsInput}) {
+  const [students, setStudents] = useState<Student[]>(studentsInput);
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
   const [tokenInput, setTokenInput] = useState<number | null>(null);
@@ -48,12 +48,6 @@ export default function Absensi() {
   });
 
 
-
-  useEffect(() => {
-    getStudents().then(res => {
-      if (Array.isArray(res.data)) setStudents(res.data);
-    });
-  }, []);
 
   
 

@@ -4,9 +4,11 @@
 import AppSidebar from "@/components/sidebar/AppSidebar";
 import StudentListHome from "@/components/StudentListHome";
 import {  SidebarTrigger, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { getStudents } from "@/lib/api";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const student = await getStudents();
   return (
     // <div className="flex flex-row">
     //   {/* <Sidebar/> */}
@@ -28,7 +30,7 @@ export default function Home() {
                 <div className="font-semibold text-lg">Dashboard</div>
             </div>
 
-            <StudentListHome/>
+            <StudentListHome studentsInput={student?.data}/>
 
           
     

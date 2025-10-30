@@ -38,8 +38,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function StudentListHome() {
-  const [students, setStudents] = useState<Student[]>([]);
+export default function StudentListHome({studentsInput}) {
+  const [students, setStudents] = useState<Student[]>(studentsInput);
 
   const [tokenRemainingOp, setTokenRemainingOp] = useState(">");
   const [tokenRemainingVal, setTokenRemainingVal] = useState<number | null>(null);
@@ -87,14 +87,6 @@ export default function StudentListHome() {
     return 0;
   });
 
-  useEffect(() => {
-    getStudents().then(res => {
-      if (Array.isArray(res.data)) {
-        console.log("test",res.data)
-        setStudents(res.data);
-      }
-    });
-  }, []);
 
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
