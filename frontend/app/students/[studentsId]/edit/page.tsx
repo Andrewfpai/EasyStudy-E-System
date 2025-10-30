@@ -11,13 +11,19 @@ import { Separator } from "@/components/ui/separator";
 import Info from "./Info";
 import { getStudentById } from "@/lib/api";
 
+import { PageProps } from "next"; // optional, if needed
+
+type Props = {
+  params: { studentsId: string };
+};
+
 
 export default async function Page({ params }: { params: { studentsId: string } }) {
     // console.log("TYPE", typeof(params))
-    const resolvedParams = params;
-    const studentId = parseInt(resolvedParams.studentsId, 10);
-    const student = await getStudentById(studentId);
-  return (
+    // const resolvedParams = params;
+    const studentId = parseInt(params.studentsId, 10);
+    const student = await getStudentById(studentId.toString());
+    return (
     <div className="flex flex-col px-8 mt-4">
 
         <div className="flex flex-row gap-2 items-center mb-4">
