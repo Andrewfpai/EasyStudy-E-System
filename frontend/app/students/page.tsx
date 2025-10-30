@@ -21,7 +21,7 @@ export default async function Page() {
             <div className="w-px h-5 bg-gray-300 mx-2"></div>
             <div className="font-semibold text-lg">Students Database</div>
         </div>
-            <StudentTable studentsInput={student?.data}/>
+            <StudentTable studentsInput={student}/>
      
 
     </div>

@@ -29,8 +29,8 @@ export default async function Home() {
                 <div className="w-px h-5 bg-gray-300 mx-2"></div>
                 <div className="font-semibold text-lg">Dashboard</div>
             </div>
-
-            <StudentListHome studentsInput={student?.data}/>
+            {/* {console.log(student, "===")} */}
+            <StudentListHome studentsInput={student}/>
 
           
     

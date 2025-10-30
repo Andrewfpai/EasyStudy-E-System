@@ -1,37 +1,52 @@
 import axios from "axios";
 
+interface Student {
+  id: number;
+  name: string;
+  hanziName: string | null;
+  pinyinName: string | null;
+  email: string;
+  address: string;
+  phoneNumber: number;
+  tokenUsed: number;
+  tokenRemaining: number;
+  joinedDate: string;
+  status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
+}
+
 const api = axios.create({
-  // baseURL: "http://localhost:5000", // your dev laptop IP
-  baseURL: "https://dichotomous-catastrophically-shirly.ngrok-free.dev", // your dev laptop IP
-  // baseURL: "http://localhost:3001", // your dev laptop IP
+  baseURL: "https://dichotomous-catastrophically-shirly.ngrok-free.dev",
 });
 
-export const getStudents = () => api.get("/students");
-export const addStudent = (data: any) => api.post("/students", data);
-export async function getStudentById(id: string) {
-  const res = await axios.get(`http://localhost:5000/students/${id}`);
+export const getStudents = async (): Promise<Student[]> => {
+  const res = await api.get<Student[]>("/students");
   return res.data;
-}
+};
 
-export async function updateStudentData(id: string, data: Partial<Student>) {
-  const res = await api.patch(`/students/${id}`, data);
+export const addStudent = async (data: Omit<Student, "id" | "joinedDate">): Promise<Student> => {
+  const res = await api.post<Student>("/students", data);
   return res.data;
-}
+};
 
-// export async function updateStudentTokens(id: string, change: number) {
-//   const res = await axios.patch(`http://localhost:3001/students/${id}/tokens`, { change });
-//   return res.data;
-// }
-// export async function addStudentTokens(id: string, tokenAmount: number) {
-//   const res = await axios.patch(`http://localhost:3001/students/${id}/add-tokens`, { tokenAmount });
-//   return res.data;
-// }
-export async function subtractStudentTokens(id: string, tokenAmount: number) {
-  const res = await api.patch(`/students/${id}/subtract-tokens`, { tokenAmount });
+export const getStudentById = async (id: string): Promise<Student> => {
+  const res = await api.get<Student>(`/students/${id}`);
   return res.data;
-}
-export async function addTokensWithPayment(id: string, tokenAmount: number, paymentUrl:string) {
-  const res = await api.patch(`/students/${id}/add-tokens-with-payment`, { tokenAmount,paymentUrl});
+};
+
+export const updateStudentData = async (
+  id: string,
+  data: Partial<Omit<Student, "id" | "joinedDate">>
+): Promise<Student> => {
+  const res = await api.patch<Student>(`/students/${id}`, data);
   return res.data;
-}
-// console.log("getStudents",getStudents)
+};
+
+export const subtractStudentTokens = async (id: string, tokenAmount: number): Promise<Student> => {
+  const res = await api.patch<Student>(`/students/${id}/subtract-tokens`, { tokenAmount });
+  return res.data;
+};
+
+export const addTokensWithPayment = async (id: string, tokenAmount: number, paymentUrl: string): Promise<Student> => {
+  const res = await api.patch<Student>(`/students/${id}/add-tokens-with-payment`, { tokenAmount, paymentUrl });
+  return res.data;
+};

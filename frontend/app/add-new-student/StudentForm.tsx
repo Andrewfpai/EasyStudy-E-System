@@ -38,7 +38,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
         email: "",
         address: "",
         phoneNumber: "",
-        joinedDate: form.joinedDate ? new Date(form.joinedDate) : undefined,
+        joinedDate: new Date().toISOString(),
         // tokenUsed: 0,
         tokenRemaining: 16,
         notes: "",
@@ -121,7 +121,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <input
-                value={form.joinedDate ? form.joinedDate?.split('T')[0] : ""}
+                value={form?.joinedDate ? form?.joinedDate?.split('T')[0] : ""}
                 id="date"
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-left"
               />

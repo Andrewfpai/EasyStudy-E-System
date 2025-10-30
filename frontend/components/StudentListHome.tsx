@@ -60,32 +60,34 @@ export default function StudentListHome({studentsInput}) {
   const sortedStudents = [...students].sort((a, b) => {
     if (!sortConfig) return 0;
 
-    let aVal: any = a[sortConfig.key as keyof Student];
-    let bVal: any = b[sortConfig.key as keyof Student];
+    const key = sortConfig.key as keyof Student;
 
-    // Special case: joinedDate → compare as Date
-    if (sortConfig.key === "joinedDate") {
-      aVal = new Date(aVal);
-      bVal = new Date(bVal);
+    const aVal = a[key];
+    const bVal = b[key];
+
+    // Handle dates
+    if (key === "joinedDate") {
+      const aDate = new Date(aVal as string);
+      const bDate = new Date(bVal as string);
+      return sortConfig.direction === "asc"
+        ? aDate.getTime() - bDate.getTime()
+        : bDate.getTime() - aDate.getTime();
     }
 
-    // Special case: id → numeric comparison
-    if (sortConfig.key === "id") {
-      aVal = Number(aVal);
-      bVal = Number(bVal);
+    // Handle numbers
+    if (typeof aVal === "number" && typeof bVal === "number") {
+      return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
     }
 
-    // Default: string comparison in alphabetical order
+    // Handle strings
     if (typeof aVal === "string" && typeof bVal === "string") {
       const comparison = aVal.localeCompare(bVal);
       return sortConfig.direction === "asc" ? comparison : -comparison;
     }
 
-    // Fallback for numbers/dates
-    if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-    if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
-    return 0;
+    return 0; // fallback
   });
+
 
 
 

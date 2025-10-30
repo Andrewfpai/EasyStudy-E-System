@@ -20,7 +20,7 @@ export default async function Page() {
             <div className="font-semibold text-lg">Students Database</div>
         </div>
           
-        <Absensi studentsInput={student?.data}/>
+        <Absensi studentsInput={student}/>
 
     </div>
   );
