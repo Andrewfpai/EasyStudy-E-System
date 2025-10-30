@@ -17,25 +17,27 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
   const [form, setForm] = useState({
     name: "",
     hanziName: "",
+    pinyinName: null, // Added to satisfy the type (backend will override)
     email: "",
     address: "",
-    phoneNumber: "",
-    // tokenUsed: 0,
-    joinedDate: new Date().toISOString(),
+    phoneNumber: "", // Keep as string
+    tokenUsed: 0, // Ensure this is present
     tokenRemaining: 16,
+    joinedDate: new Date().toISOString(),
     status: "ACTIVE" as 'ACTIVE' | 'OUT' | 'TEMP_INACTIVE',
-    notes: "",
+    notes: "", // Added
   });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Exclude joinedDate and pinyinName (backend handles them)
+      // Exclude joinedDate (backend handles it); pinyinName is null, tokenUsed is included
       const { joinedDate, ...studentData } = form;
       await addStudent(studentData);
       alert("Student added successfully!");
       setForm({
         name: "",
         hanziName: "",
+        pinyinName: null, // Reset
         email: "",
         address: "",
         phoneNumber: "", // Reset to string
@@ -51,6 +53,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
       alert("Failed to add student.");
     }
   };
+
 
   return (
     <form
