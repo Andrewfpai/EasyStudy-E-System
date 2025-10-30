@@ -13,8 +13,8 @@ import { getStudentById } from "@/lib/api";
 
 
 export default async function Page({ params }: { params: { studentsId: string } }) {
- 
-    const resolvedParams = await params;
+    // console.log("TYPE", typeof(params))
+    const resolvedParams = params;
     const studentId = parseInt(resolvedParams.studentsId, 10);
     const student = await getStudentById(studentId);
   return (
