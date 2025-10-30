@@ -29,7 +29,11 @@ export const addStudent = async (data: Omit<Student, "id" | "joinedDate">): Prom
 };
 
 export const getStudentById = async (id: string): Promise<Student> => {
-  const res = await api.get<Student>(`/students/${id}`);
+  const numericId = parseInt(id, 10);
+  if (isNaN(numericId)) {
+    throw new Error(`Invalid student ID: ${id}. Must be a number.`);
+  }
+  const res = await api.get<Student>(`/students/${numericId}`);
   return res.data;
 };
 
