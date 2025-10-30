@@ -2,12 +2,8 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import Info from "./Info";
 import { getStudentById } from "@/lib/api";
 
-export default async function Page(props: { params: Promise<{ studentsId: string }> }) {
-  // Await the params Promise directly
-  const params = await props.params;
-  // console.log(params)
-  
-  // Now params is resolved and you can access studentsId
+export default async function Page(props: any) {
+  const { params } = await props; // await the route props
   const student = await getStudentById(params.studentsId);
 
   return (
@@ -21,3 +17,4 @@ export default async function Page(props: { params: Promise<{ studentsId: string
     </div>
   );
 }
+
