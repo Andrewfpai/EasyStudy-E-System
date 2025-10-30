@@ -1,7 +1,7 @@
 "use client"
 import { getStudentById, updateStudentTokens } from "@/lib/api";
 import { useState } from "react";
-import Details from "./Details";
+import Details from "../Details";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Link from "next/link"
 import { formatForDisplay } from "@/utils/date";
@@ -34,10 +34,11 @@ export default function TokenHistory({ student: initialStudent }) {
 
   return (
 
-    <div className="flex flex-row">
-
-        <div className="">
+   
+<div className="flex-[3] min-w-0">
             <h2 className="font-semibold text-xl mt-5 mb-5">Token Add History</h2>
+        <div className="overflow-auto max-h-[500px] rounded-md">
+
             <div className="overflow-auto max-h-[500px] rounded-md">
                 <Table className="w-full bg-white ">
                 <TableHeader className="bg-gray-100">
@@ -69,7 +70,7 @@ export default function TokenHistory({ student: initialStudent }) {
         </div>
 
         
+</div>
 
-    </div>
   );
 }

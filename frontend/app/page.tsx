@@ -20,7 +20,7 @@ export default function Home() {
     //     <Absensi/>
     //   </div>
     // </div>
-        <div className="flex flex-col ml-8 mt-4">
+        <div className="flex flex-col px-8 mt-4 bg-[#2A2A2A]">
         
             <div className="flex flex-row gap-2 items-center mb-4">
                 <SidebarTrigger className="py-2 -ml-2"/>

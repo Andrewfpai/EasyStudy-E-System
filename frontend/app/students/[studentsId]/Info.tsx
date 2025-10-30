@@ -40,14 +40,14 @@ export default function Info({ student: initialStudent }) {
     console.log(tab)
   return (
     <div className="mt-5">
-        <div className="grid grid-cols-6 items-center gap-5 text-center mb-2">
+        <div className="grid grid-cols-4 lg:grid-cols-5 items-center gap-5 text-center mb-2">
             <div onClick={()=>handleTab(1)} className={`${tab===1?"":"text-gray-400"}`}>Basic Info</div>
             <div onClick={()=>handleTab(2)} className={`${tab===2?"":"text-gray-400"}`}>Token Info</div>
         </div>
         
         {/* Line Slider */}
-        <div className="relative grid grid-cols-6 items-center gap-5 ">
-            <div className={`col-span-1 border-b-3 border-black rounded-lg absolute bottom-0 left-0 w-1/6 transition-transform duration-300`} 
+        <div className="relative grid grid-cols-4 lg:grid-cols-5 items-center gap-5 ">
+            <div className={`col-span-1 border-b-3 border-black rounded-lg absolute bottom-0 left-0 w-1/4 lg:w-1/5 transition-transform duration-300`} 
                 style={{ transform: `translateX(${tab === 1 ? 0 : 100}%)` }}
             ></div>
         </div>

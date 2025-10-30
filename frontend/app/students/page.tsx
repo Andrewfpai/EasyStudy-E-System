@@ -14,7 +14,7 @@ export default async function Page() {
 
  
   return (
-    <div className="flex flex-col ml-8 mt-4">
+    <div className="flex flex-col px-8 mt-4">
 
         <div className="flex flex-row gap-2 items-center mb-4">
             <SidebarTrigger className="py-2 -ml-2"/>

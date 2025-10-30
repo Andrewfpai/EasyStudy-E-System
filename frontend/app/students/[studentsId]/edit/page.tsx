@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { studentsId: string } 
     const studentId = parseInt(resolvedParams.studentsId, 10);
     const student = await getStudentById(studentId);
   return (
-    <div className="flex flex-col ml-8 mt-4">
+    <div className="flex flex-col px-8 mt-4">
 
         <div className="flex flex-row gap-2 items-center mb-4">
             <SidebarTrigger className="py-2 -ml-2"/>

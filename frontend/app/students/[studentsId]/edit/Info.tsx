@@ -139,9 +139,9 @@ export default function Info({ student: initialStudent }) {
     <div className="flex flex-row w-full">
       {/* <Sidebar /> */}
       
-      <div className="flex-1 py-4 px-6 bg-white shadow-md border rounded-md max-w-1/2">
+      <div className="flex-1 py-4 px-6 bg-white shadow-md border rounded-md max-w-[700px]">
         <h1 className="text-xl font-bold">Student Details</h1>
-        <div className="grid grid-cols-2 space-y-4 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 space-y-4 mt-6">
           {renderField("Name", "name")}
           {renderField("Hanzi Name", "hanziName")}
           {/* <div className="col-span-2 grid grid-cols-subgrid gap-4">
@@ -155,29 +155,29 @@ export default function Info({ student: initialStudent }) {
           {renderFieldTextArea("Notes", "notes")}
         </div>
 
-        <div className="mt-4 flex gap-2">
-        <input
-          type="number"
-          value={tokenInput ?? ""}
-          onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
-          placeholder="Token amount"
-          className="border px-2 py-1 rounded w-32"
-        />
-        <input
-          type="text"
-          value={paymentUrl}
-          onChange={e => setPaymentUrl(e.target.value)}
-          placeholder="Payment image URL"
-          className="border px-2 py-1 rounded w-64"
-        />
-        <button
-          className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
-          onClick={handleAddTokensWithPayment}
-          disabled={loading}
-        >
-          Add Token & Payment
-        </button>
-      </div>
+        {/* <div className="mt-4 flex gap-2">
+          <input
+            type="number"
+            value={tokenInput ?? ""}
+            onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
+            placeholder="Token amount"
+            className="border px-2 py-1 rounded w-32"
+          />
+          <input
+            type="text"
+            value={paymentUrl}
+            onChange={e => setPaymentUrl(e.target.value)}
+            placeholder="Payment image URL"
+            className="border px-2 py-1 rounded w-64"
+          />
+          <button
+            className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
+            onClick={handleAddTokensWithPayment}
+            disabled={loading}
+          >
+            Add Token & Payment
+          </button>
+        </div> */}
 
 
 

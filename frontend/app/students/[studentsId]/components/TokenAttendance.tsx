@@ -27,48 +27,38 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-
 export default function TokenAttendance({ student: initialStudent }) {
-    const [student, setStudent] = useState(initialStudent);
-
+  const [student, setStudent] = useState(initialStudent);
 
   return (
-
-    <div className="flex flex-row">
-
-        <div className="">
-            <h2 className="font-semibold text-xl mt-5 mb-5">{`Attendance Record`}</h2>
-            <div className="overflow-auto max-h-[500px] rounded-md">
-                <Table className="w-full bg-white ">
-                <TableHeader className="bg-gray-100">
-                    <TableRow>
-                    
-                    <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Date</TableHead>
-                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Token Amount</TableHead>
-                    
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    
-                    {student.tokenUsageHistory.map((tokenUsage, index)=>{
-                        const formatted = formatForDisplay(tokenUsage.createdAt);
-                   
-                        return (
-                        <TableRow key={index}>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{formatted?.date}{` (${formatted?.time})`}</TableCell>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600">{tokenUsage?.tokenAmount ?? "No proof"}</TableCell>
-                        
-
-                        </TableRow>
-                    )})}
-        
-                </TableBody>
-                </Table>
-            </div>
-        </div>
-
-        
-
+    <div className="flex-[2] min-w-0">
+      <h2 className="font-semibold text-xl mt-5 mb-5">Attendance Record</h2>
+      <div className="overflow-auto max-h-[500px] rounded-md">
+        <Table className="w-full bg-white">
+          <TableHeader className="bg-gray-100">
+            <TableRow>
+              <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Date</TableHead>
+              <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Token Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {student.tokenUsageHistory.map((tokenUsage, index) => {
+              const formatted = formatForDisplay(tokenUsage.createdAt);
+              return (
+                <TableRow key={index}>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
+                    {formatted?.date} ({formatted?.time})
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-gray-600">
+                    {tokenUsage?.tokenAmount ?? "No proof"}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
+

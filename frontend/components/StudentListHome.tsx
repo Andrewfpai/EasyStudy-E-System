@@ -106,8 +106,8 @@ export default function StudentListHome() {
     <div className="flex flex-col mb-5 px-6">
       <div className="font-bold text-2xl">Student Reminder</div>
 
-      <div className="flex flex-row items-center gap-5 mt-5">
-        <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row gap-5 md:flex-col md:items-left lg:flex-row lg:items-center lg:gap-10 mt-5">
+        <div className="flex flex-col gap-2 ">
           <label className="text-gray-700 font-medium">Token Remaining</label>
           <div className="flex gap-2">
             <DropdownMenu>
@@ -127,13 +127,13 @@ export default function StudentListHome() {
               type="number"
               value={tokenRemainingVal ?? ""}
               onChange={(e) => setTokenRemainingVal(e.target.value ? parseInt(e.target.value) : null)}
-              className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 max-w-24"
               placeholder="Value"
             />
           </div>
         </div>
 
-        <div className="flex flex-row gap-2 ">
+        <div className="flex flex-col gap-2 ">
           <label className="text-gray-700 font-medium">Status</label>
           <div className="flex gap-4">
             {["ACTIVE", "TEMP_INACTIVE", "OUT"].map((s) => (

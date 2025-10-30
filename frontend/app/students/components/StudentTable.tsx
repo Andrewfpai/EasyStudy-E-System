@@ -40,7 +40,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { formatDateToISO } from "@/utils/date";
+import { formatDateToISO, formatForDisplay } from "@/utils/date";
 
 export default function StudentTable({studentsInput}) {
   const [students, setStudents] = useState<Student[]>(studentsInput);
@@ -317,7 +317,11 @@ export default function StudentTable({studentsInput}) {
             </div>
           </div>
 
-
+          <div>
+            <button 
+            className="px-4 py-2 bg-[#f8c311] rounded-md  " 
+            onClick={()=>{resetFilters()}}>Reset</button>
+          </div>
           </div>
 
         </div>
@@ -376,7 +380,9 @@ export default function StudentTable({studentsInput}) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                  {sortedStudents.map(student => (
+                  {sortedStudents.map(student => {
+                  const formattedDate = formatForDisplay(student?.joinedDate)
+                  return (
                   <TableRow 
                     key={student.id}
                     onClick={() => router.push(`/students/${student.id}`)}
@@ -395,10 +401,10 @@ export default function StudentTable({studentsInput}) {
                         student.status === "OUT" ? "text-red-600" :
                         "text-yellow-600"
                       } min-w-32` }>{student.status}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.joinedDate}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formattedDate?.date} (${formattedDate?.time})`}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.updateAt || "-"}</TableCell>
                   </TableRow>
-                  ))}
+                  )})}
               </TableBody>
             </Table>
           </div>
