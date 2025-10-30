@@ -26,22 +26,24 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
     status: "ACTIVE" as 'ACTIVE' | 'OUT' | 'TEMP_INACTIVE',
     notes: "",
   });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addStudent({ ...form });
+      // Exclude joinedDate and pinyinName (backend handles them)
+      const { joinedDate, ...studentData } = form;
+      await addStudent(studentData);
       alert("Student added successfully!");
       setForm({
         name: "",
         hanziName: "",
         email: "",
         address: "",
-        phoneNumber: "",
-        joinedDate: new Date().toISOString(),
-        // tokenUsed: 0,
+        phoneNumber: "", // Reset to string
+        tokenUsed: 0, // Reset
         tokenRemaining: 16,
-        notes: "",
+        joinedDate: new Date().toISOString(),
+        status: "ACTIVE",
+        notes: "", // Reset
       });
       onStudentAdded?.();
     } catch (error) {
