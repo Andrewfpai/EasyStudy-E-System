@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Radio_Canada, Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Geist, Geist_Mono } from 'next/font/google'
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 
-const inter = Radio_Canada({
+const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });

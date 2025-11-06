@@ -4,21 +4,7 @@ import { getStudents, subtractStudentTokens } from "@/lib/api"; // import API
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatDate } from "@/utils/date";
-
-interface Student {
-  id: number;
-  name: string;
-  hanziName: string;
-  pinyinName: string;
-  email: string;
-  address: string;
-  phoneNumber: number;
-  tokenUsed: number;
-  tokenRemaining: number;
-  joinedDate: string;
-  status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
-  updatedAt: string;
-}
+import { Student } from "@/app/types/student";
 import {
   Table,
   TableBody,
@@ -29,17 +15,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function Absensi({studentsInput}) {
+interface AbsensiProps {
+  studentsInput: Student[];
+}
+
+export default function Absensi({studentsInput}:AbsensiProps) {
   const [students, setStudents] = useState<Student[]>(studentsInput);
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
   const [tokenInput, setTokenInput] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({
-    key: "updatedAt",
-    direction: "desc", // most recent first
-    });
+
 
   const sortedStudents = [...students].sort((a, b) => {
     const aTime = new Date(a.updatedAt || 0).getTime();
@@ -94,7 +81,7 @@ export default function Absensi({studentsInput}) {
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4">
+    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4 text-E-black">
       <div className="flex flex-col px-6">
         <div className="font-bold text-2xl">Student Attendance</div>
         
@@ -104,7 +91,7 @@ export default function Absensi({studentsInput}) {
             placeholder="Search by Name, Hanzi, or Pinyin"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="px-4 py-2 col-span-3 border border-gray-400 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 col-span-3 border border-gray-400 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
           />
 
           {/* Token Controls */}
@@ -114,15 +101,18 @@ export default function Absensi({studentsInput}) {
               value={tokenInput ?? ""}
               onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
               placeholder="Token amount"
-              className="px-4 py-2 col-span-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 col-span-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
-            <button
-              className="bg-red-500 col-span-2 text-white px-4 py-1 rounded disabled:opacity-50"
-              onClick={() => subtractTokens()}
-              disabled={loading}
-            >
-              Subtract Token
-            </button>
+            <div className="col-span-2">
+              <button
+                className="bg-red-500  text-E-white px-4 py-2.5 rounded-lg disabled:opacity-50"
+                onClick={() => subtractTokens()}
+                disabled={loading}
+              >
+                Subtract Token
+              </button>
+
+            </div>
           </div>
 
         </div>
@@ -172,11 +162,12 @@ export default function Absensi({studentsInput}) {
                   key={student.id}
                   // onClick={() => router.push(`/students/${student.id}`)}
                 >
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
+                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center ">
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleSelect(student)}
+                      className=" border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
                     />
                   </TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
@@ -185,9 +176,9 @@ export default function Absensi({studentsInput}) {
                   <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
                   <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                    student.status === "ACTIVE" ? "text-green-600" :
+                    student.status === "ACTIVE" ? "text-primary" :
                     student.status === "OUT" ? "text-red-600" :
-                    "text-yellow-600"
+                    "text-secondary"
                   } min-w-32` }>{student.status}</TableCell>
                 </TableRow>
                   );

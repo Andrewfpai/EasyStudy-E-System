@@ -1,7 +1,7 @@
 
 // import StudentList from "./components/StudentList";
 // import StudentForm from "./components/StudentForm";
-import StudentsPage from "./students";
+
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +14,7 @@ export default async function Page() {
 
  
   return (
-    <div className="flex flex-col px-8 mt-4">
+    <div className="flex flex-col px-8 mt-4 text-E-black bg-background">
 
         <div className="flex flex-row gap-2 items-center mb-4">
             <SidebarTrigger className="py-2 -ml-2"/>

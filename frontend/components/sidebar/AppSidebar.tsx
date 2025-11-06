@@ -25,7 +25,7 @@ export default function AppSidebar() {
   const isActive = (path: string) => pathname === path
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <Sidebar className="h-full" collapsible="offcanvas">
       <SidebarHeader>
         <div className="flex flex-row items-center px-4 py-2 gap-2">
           {/* <div className="relative w-10 h-10">

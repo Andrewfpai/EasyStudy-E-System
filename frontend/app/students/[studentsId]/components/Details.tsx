@@ -1,17 +1,21 @@
 "use client"
 import { useState } from "react";
-import { updateStudentData, addTokensWithPayment } from "@/lib/api";
-import { formatDate, formatDateToISO, formatForDisplay } from "@/utils/date";
-import Link from "next/link"
 
-export default function Details({ student: initialStudent }) {
-  const [student, setStudent] = useState(initialStudent);
+import { Student } from "@/app/types/student";
+import { formatForDisplay } from "@/utils/date";
+
+interface DetailsProps {
+  studentsInput: Student;
+}
+
+export default function Details({ studentsInput }:DetailsProps) {
+  const [student, setStudent] = useState<Student>(studentsInput);
  
   console.log("student: ",student)
 
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full text-E-Black">
       
       
 
@@ -77,7 +81,7 @@ export default function Details({ student: initialStudent }) {
             
             <div className="grid grid-cols-3 px-6 py-3">
               <p className="">Notes:</p>
-              <div className="font-medium col-start-2 col-span-full break-words whitespace-pre-wrap">{student.notes}</div>
+              <div className="font-medium col-start-2 col-span-full break-words whitespace-pre-wrap">{student?.notes}</div>
             </div>
             {/* <div className="border-t border-dotted border-gray-400 my-3 col-span-2"></div> */}
             

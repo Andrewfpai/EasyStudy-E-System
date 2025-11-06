@@ -1,21 +1,9 @@
 "use client"
-import { getStudentById, updateStudentTokens } from "@/lib/api";
-import { useState } from "react";
-import Details from "../[studentsId]/Details";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import Link from "next/link"
-import { formatForDisplay } from "@/utils/date";
 
-interface Student {
-  id: number;
-  name: string;
-  email: string;
-  address: string;
-  phoneNumber: number;
-  tokenUsed: number;
-  tokenRemaining: number;
-  joinedDate: string;
-}
+import { useState } from "react";
+
+import { formatForDisplay } from "@/utils/date";
+import { Student } from "@/app/types/student";
 
 import {
   Table,
@@ -27,13 +15,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function TokenAttendance({ student: initialStudent }) {
-  const [student, setStudent] = useState(initialStudent);
+interface TokenAttendanceProps {
+  studentsInput: Student;
+}
+
+export default function TokenAttendance({ studentsInput }: TokenAttendanceProps) {
+  const [student, setStudent] = useState<Student>(studentsInput);
+
+  console.log(student)
 
   return (
-    <div className="flex-[2] min-w-0">
+    <div className="flex-[2] min-w-0 text-E-black">
       <h2 className="font-semibold text-xl mt-5 mb-5">Attendance Record</h2>
-      <div className="overflow-auto max-h-[500px] rounded-md">
+      <div className="overflow-auto max-h-[500px] rounded-md bg-gray-100 border">
         <Table className="w-full bg-white">
           <TableHeader className="bg-gray-100">
             <TableRow>
@@ -42,8 +36,8 @@ export default function TokenAttendance({ student: initialStudent }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {student.tokenUsageHistory.map((tokenUsage, index) => {
-              const formatted = formatForDisplay(tokenUsage.createdAt);
+            {(student?.tokenUsageHistory|| []).map((tokenUsage, index) => {
+              const formatted = formatForDisplay(tokenUsage?.createdAt);
               return (
                 <TableRow key={index}>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">

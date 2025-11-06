@@ -106,7 +106,7 @@ export class StudentsService {
         tokenUsageHistory: true,
       },
     });
-
+ 
     await this.prisma.tokenUsedDate.create({
         data: { studentId: id, tokenAmount },
       });

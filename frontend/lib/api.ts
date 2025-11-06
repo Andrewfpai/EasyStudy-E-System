@@ -39,19 +39,19 @@ export const getStudentById = async (id: string): Promise<Student> => {
 };
 
 export const updateStudentData = async (
-  id: string,
+  id: number,
   data: Partial<Omit<Student, "id" | "joinedDate">>
 ): Promise<Student> => {
   const res = await api.patch<Student>(`/students/${id}`, data);
   return res.data;
 };
 
-export const subtractStudentTokens = async (id: string, tokenAmount: number): Promise<Student> => {
+export const subtractStudentTokens = async (id: number, tokenAmount: number): Promise<Student> => {
   const res = await api.patch<Student>(`/students/${id}/subtract-tokens`, { tokenAmount });
   return res.data;
 };
 
-export const addTokensWithPayment = async (id: string, tokenAmount: number, paymentUrl: string): Promise<Student> => {
+export const addTokensWithPayment = async (id: number, tokenAmount: number, paymentUrl: string): Promise<Student> => {
   const res = await api.patch<Student>(`/students/${id}/add-tokens-with-payment`, { tokenAmount, paymentUrl });
   return res.data;
 };

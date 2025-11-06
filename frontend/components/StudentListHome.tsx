@@ -3,20 +3,7 @@ import { useEffect, useState } from "react";
 import { getStudents } from "@/lib/api"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-interface Student {
-  id: number;
-  name: string;
-  hanziName: string;
-  pinyinName: string;
-  email: string;
-  address: string;
-  phoneNumber: number;
-  tokenUsed: number;
-  tokenRemaining: number;
-  joinedDate: string;
-  status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
-}
-
+import { Student } from "@/app/types/student";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +25,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function StudentListHome({studentsInput}) {
+interface StudentListHomeProps {
+  studentsInput: Student[];
+}
+
+export default function StudentListHome({ studentsInput }: StudentListHomeProps) {
   const [students, setStudents] = useState<Student[]>(studentsInput);
 
   const [tokenRemainingOp, setTokenRemainingOp] = useState(">");
@@ -93,9 +84,9 @@ export default function StudentListHome({studentsInput}) {
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
-  console.log("student:",students);
+  // console.log("student:",students);
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4">
+    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4 text-E-Black ">
       {/* Search input */}
     <div className="flex flex-col mb-5 px-6">
       <div className="font-bold text-2xl">Student Reminder</div>
@@ -106,7 +97,7 @@ export default function StudentListHome({studentsInput}) {
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
 
                 {tokenRemainingOp}
                 </div>
@@ -121,14 +112,14 @@ export default function StudentListHome({studentsInput}) {
               type="number"
               value={tokenRemainingVal ?? ""}
               onChange={(e) => setTokenRemainingVal(e.target.value ? parseInt(e.target.value) : null)}
-              className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 max-w-24"
+              className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary max-w-24"
               placeholder="Value"
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 ">
-          <label className="text-gray-700 font-medium">Status</label>
+        <div className="flex flex-col gap-3 ">
+          <label className="text-gray-700 font-medium -mt-2">Status</label>
           <div className="flex gap-4">
             {["ACTIVE", "TEMP_INACTIVE", "OUT"].map((s) => (
               <label
@@ -141,7 +132,7 @@ export default function StudentListHome({studentsInput}) {
                     if (checked) setStatusFilter([...statusFilter, s])
                     else setStatusFilter(statusFilter.filter((st) => st !== s))
                   }}
-                  className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
+                  className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
                 />
                 <span>{s}</span>
               </label>
@@ -153,10 +144,10 @@ export default function StudentListHome({studentsInput}) {
     </div>
 
 
-      <div className="overflow-auto border bg-gray-100 flex-1">
-        <div className="max-w-vw overflow-auto max-h-[500px] rounded-md">
+      <div className="overflow-auto border bg-gray-100 flex-1 max-h-[500px]">
+       
           <Table className="w-full bg-white">
-            <TableHeader className="bg-gray-100">
+            <TableHeader className="bg-gray-100 sticky top-0">
               <TableRow>
                 <TableHead
                   className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
@@ -203,13 +194,13 @@ export default function StudentListHome({studentsInput}) {
                   <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
                   <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                    student.status === "ACTIVE" ? "text-green-600" :
+                    student.status === "ACTIVE" ? "text-primary" :
                     student.status === "OUT" ? "text-red-600" :
-                    "text-yellow-600"
+                    "text-primary"
                   } min-w-32` }>{student.status}</TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
                     <Link href={`https://wa.me/${student.phoneNumber}`}>
-                      <button className="px-[20px] ...">Hubungi Murid</button>
+                      <button className="underline hover:opacity-40 hover:no-underline cursor-pointer">Hubungi Murid</button>
                     </Link>
                   </TableCell>
                 </TableRow>
@@ -217,7 +208,7 @@ export default function StudentListHome({studentsInput}) {
             </TableBody>
           </Table>
         </div>
-      </div>
+   
       
     </div>
   );

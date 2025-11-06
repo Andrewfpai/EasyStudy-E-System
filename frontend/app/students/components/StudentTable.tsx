@@ -2,19 +2,6 @@
 import { useEffect, useState } from "react";
 import { getStudents } from "../../../lib/api";
 import { useRouter } from "next/navigation";
-interface Student {
-  id: number;
-  name: string;
-  hanziName: string;
-  pinyinName: string;
-  email: string;
-  address: string;
-  phoneNumber: number;
-  tokenUsed: number;
-  tokenRemaining: number;
-  joinedDate: string;
-  status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
-}
 import {
   Table,
   TableBody,
@@ -24,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import { Student } from "@/app/types/student";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,7 +29,11 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { formatDateToISO, formatForDisplay } from "@/utils/date";
 
-export default function StudentTable({studentsInput}) {
+interface StudentTableProps {
+  studentsInput: Student[];
+}
+
+export default function StudentTable({ studentsInput }: StudentTableProps) {
   const [students, setStudents] = useState<Student[]>(studentsInput);
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -175,14 +166,14 @@ export default function StudentTable({studentsInput}) {
 
   console.log("student:",students);
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg py-4 ">
+    <div className="flex flex-col bg-gray-200 rounded-lg py-4 text-E-black bg-background">
 
       <div className="flex flex-row items-center justify-between mb-5 px-6">
         <div className="font-bold text-2xl">Student Table</div>
         <div className="">
           <div className="flex flex-row gap-4">
             <button
-                className="px-4 py-2 bg-gray-500 rounded-md"
+                className="px-4 py-2 bg-primary text-E-white rounded-md"
                 onClick={() => setFilterOpen(!filterOpen)}
               > Filters </button>
 
@@ -191,7 +182,7 @@ export default function StudentTable({studentsInput}) {
                 placeholder="Search by Name, Hanzi, or Pinyin"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2 border border-gray-400 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 border border-E-muted-gray rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
               />
           </div>
 
@@ -204,7 +195,7 @@ export default function StudentTable({studentsInput}) {
               <div className="flex gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <div className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
 
                     {tokenUsedOp}
                     </div>
@@ -219,7 +210,7 @@ export default function StudentTable({studentsInput}) {
                   type="number"
                   value={tokenUsedVal ?? ""}
                   onChange={(e) => setTokenUsedVal(e.target.value ? parseInt(e.target.value) : null)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Value"
                 />
               </div>
@@ -230,7 +221,7 @@ export default function StudentTable({studentsInput}) {
               <div className="flex gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <div className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <div className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
 
                     {tokenRemainingOp}
                     </div>
@@ -245,7 +236,7 @@ export default function StudentTable({studentsInput}) {
                   type="number"
                   value={tokenRemainingVal ?? ""}
                   onChange={(e) => setTokenRemainingVal(e.target.value ? parseInt(e.target.value) : null)}
-                  className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Value"
                 />
               </div>
@@ -267,7 +258,7 @@ export default function StudentTable({studentsInput}) {
                         if (checked) setStatusFilter([...statusFilter, s])
                         else setStatusFilter(statusFilter.filter((st) => st !== s))
                       }}
-                      className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500"
+                      className="w-5 h-5 border-[1.5px] border-E-muted-gray data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
                     />
                     <span>{s}</span>
                   </label>
@@ -282,7 +273,7 @@ export default function StudentTable({studentsInput}) {
               <div className="col-span-2 ">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div className="w-full flex border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <div className="w-full flex border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
                       {joinedDateOp === ">" ? "After" : "Before"}
                     </div>
                   </DropdownMenuTrigger>
@@ -296,7 +287,7 @@ export default function StudentTable({studentsInput}) {
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="col-span-3 flex items-center justify-between border border-gray-300 rounded-md px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="col-span-3 flex items-center justify-between border border-E-muted-gray rounded-md px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     {joinedDateVal ? joinedDateVal : "Pick a date"}
                   </button>
@@ -322,7 +313,7 @@ export default function StudentTable({studentsInput}) {
 
           <div>
             <button 
-            className="px-4 py-2 bg-[#f8c311] rounded-md  " 
+            className="px-4 py-2 bg-primary text-E-white rounded-md  " 
             onClick={()=>{resetFilters()}}>Reset</button>
           </div>
           </div>
@@ -405,7 +396,7 @@ export default function StudentTable({studentsInput}) {
                         "text-yellow-600"
                       } min-w-32` }>{student.status}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formattedDate?.date} (${formattedDate?.time})`}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.updateAt || "-"}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student?.updatedAt || "-"}</TableCell>
                   </TableRow>
                   )})}
               </TableBody>

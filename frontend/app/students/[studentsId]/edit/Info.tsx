@@ -9,27 +9,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Student } from "@/app/types/student";
 
 // Define the Student type (should match your backend Prisma model)
-interface Student {
-  id: number
-  name: string
-  hanziName: string
-  pinyinName: string
-  email: string
-  address: string
-  phoneNumber: string
-  notes?: string
-  status: "ACTIVE" | "TEMP_INACTIVE" | "OUT"
-  joinedDate?: string
-}
+
 
 interface InfoProps {
-  student: Student
+  studentsInput: Student;
 }
 
-export default function Info({ student: initialStudent }: InfoProps) {
-  const [student, setStudent] = useState<Student>(initialStudent)
+export default function Info({ studentsInput }: InfoProps) {
+  const [student, setStudent] = useState<Student>(studentsInput);
   const [paymentUrl, setPaymentUrl] = useState("")
   const [editedFields, setEditedFields] = useState<Partial<Student>>({})
   const [loading, setLoading] = useState(false)
@@ -64,23 +54,6 @@ export default function Info({ student: initialStudent }: InfoProps) {
     }
   }
 
-  const handleAddTokensWithPayment = async () => {
-    if (!tokenInput || loading) return
-    setLoading(true)
-    try {
-      const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl)
-      setStudent(updated)
-      setTokenInput(null)
-      setPaymentUrl("")
-      alert("Tokens and payment recorded successfully!")
-    } catch (err) {
-      console.error(err)
-      alert("Failed to add tokens/payment.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const renderField = <K extends keyof Student>(label: string, field: K) => (
     <div className="flex flex-col gap-2">
       <p>{label}:</p>
@@ -88,7 +61,7 @@ export default function Info({ student: initialStudent }: InfoProps) {
         type="text"
         value={student[field]?.toString() ?? ""}
         onChange={e => handleFieldChange(field, e.target.value as Student[K])}
-        className="border px-3 py-2 rounded w-64"
+        className="border px-3 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
       />
       {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
     </div>
@@ -105,7 +78,7 @@ export default function Info({ student: initialStudent }: InfoProps) {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="border border-gray-300 rounded px-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-400 w-64"
+            className="border border-gray-300 rounded px-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-64"
           >
             {options.find(opt => opt.value === student[field])?.display || "Select status"}
           </button>
@@ -132,7 +105,7 @@ export default function Info({ student: initialStudent }: InfoProps) {
       <textarea
         value={student[field]?.toString() ?? ""}
         onChange={e => handleFieldChange(field, e.target.value as Student[K])}
-        className="border px-3 py-2 rounded w-64"
+        className="border px-3 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
       />
       {editedFields[field] !== undefined && <span className="text-red-500">●</span>}
     </div>
@@ -157,7 +130,7 @@ export default function Info({ student: initialStudent }: InfoProps) {
           <button
             onClick={handleSave}
             disabled={loading || !Object.keys(editedFields).length}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+            className="px-4 py-2 bg-primary text-white rounded hover:opacity-80 disabled:opacity-50 cursor-pointer"
           >
             Save Changes
           </button>

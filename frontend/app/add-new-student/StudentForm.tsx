@@ -58,7 +58,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-5 overflow-auto max-w-lg w-full mx-auto p-6 bg-white rounded-xl shadow-md space-y-6"
+      className="mt-5 overflow-auto max-w-lg w-full mx-auto p-6 bg-white rounded-xl shadow-md space-y-6 text-E-black"
     >
       {/* Name */}
       <div className="flex flex-col">
@@ -67,7 +67,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           type="text"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition"
           required
         />
       </div>
@@ -79,7 +79,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           type="text"
           value={form.hanziName}
           onChange={e => setForm({ ...form, hanziName: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:border-primary focus:ring-2 focus:ring-primary transition"
           required
         />
       </div>
@@ -91,7 +91,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           type="email"
           value={form.email}
           onChange={e => setForm({ ...form, email: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:border-primary focus:ring-2 focus:ring-primary transition"
           required
         />
       </div>
@@ -103,7 +103,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           type="text"
           value={form.address}
           onChange={e => setForm({ ...form, address: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:border-primary focus:ring-2 focus:ring-primary transition"
         />
       </div>
 
@@ -114,7 +114,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
             type="tel"
             value={form.phoneNumber}
             onChange={e => setForm({ ...form, phoneNumber: e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:border-primary focus:ring-2 focus:ring-primary transition"
           />
         </div>
 
@@ -128,7 +128,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
               <input
                 value={form?.joinedDate ? form?.joinedDate?.split('T')[0] : ""}
                 id="date"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-left"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:border-primary focus:ring-2 focus:ring-primary transition text-left"
               />
                 {/* {form.joinedDate || "Select date"} show placeholder if empty */}
                 {/* <ChevronDownIcon /> */}
@@ -169,7 +169,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
             type="number"
             value={form.tokenRemaining}
             onChange={e => setForm({ ...form, tokenRemaining: +e.target.value })}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
           />
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
         <textarea
           value={form.notes || ""}
           onChange={e => setForm({ ...form, notes: e.target.value })}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition h-28 resize-y"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition h-28 resize-y"
           placeholder="Write notes here..."
         />
       </div>
@@ -190,7 +190,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
       {/* Submit */}
       <button
         type="submit"
-        className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+        className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-blue-700 transition"
       >
         Add Student
       </button>

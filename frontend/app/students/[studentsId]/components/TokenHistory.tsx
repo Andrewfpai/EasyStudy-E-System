@@ -1,21 +1,10 @@
 "use client"
-import { getStudentById, updateStudentTokens } from "@/lib/api";
-import { useState } from "react";
-import Details from "../Details";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import Link from "next/link"
-import { formatForDisplay } from "@/utils/date";
 
-interface Student {
-  id: number;
-  name: string;
-  email: string;
-  address: string;
-  phoneNumber: number;
-  tokenUsed: number;
-  tokenRemaining: number;
-  joinedDate: string;
-}
+import { useState } from "react";
+
+
+import { formatForDisplay } from "@/utils/date";
+import { Student } from "@/app/types/student";
 
 import {
   Table,
@@ -27,10 +16,15 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+interface TokenHistoryProps {
+  studentsInput: Student;
+}
 
-export default function TokenHistory({ student: initialStudent }) {
-    const [student, setStudent] = useState(initialStudent);
 
+export default function TokenHistory({ studentsInput }: TokenHistoryProps) {
+    const [student, setStudent] = useState<Student>(studentsInput);
+
+    console.log("studentetttttt",student)
 
   return (
 
@@ -39,7 +33,7 @@ export default function TokenHistory({ student: initialStudent }) {
             <h2 className="font-semibold text-xl mt-5 mb-5">Token Add History</h2>
         <div className="overflow-auto max-h-[500px] rounded-md">
 
-            <div className="overflow-auto max-h-[500px] rounded-md">
+            <div className="overflow-auto max-h-[500px] rounded-md border">
                 <Table className="w-full bg-white ">
                 <TableHeader className="bg-gray-100">
                     <TableRow>
@@ -52,14 +46,14 @@ export default function TokenHistory({ student: initialStudent }) {
                 </TableHeader>
                 <TableBody>
                     
-                    {student.tokenAddHistory.map((tokenAdd, index)=>{
+                    {(student?.tokenAddHistory || [])?.map((tokenAdd, index)=>{
                         const formatted = formatForDisplay(tokenAdd.createdAt);
                         console.log(formatted)
                         return (
                         <TableRow key={index}>
                             <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{formatted?.date}{` (${formatted?.time})`}</TableCell>
                             <TableCell className="px-6 py-4 text-sm text-gray-600">{tokenAdd?.tokenAmount ?? "No proof"}</TableCell>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600">{student?.payments[index]?.imageUrl ?? "No proof"}</TableCell>
+                            <TableCell className="px-6 py-4 text-sm text-gray-600">{(student?.payments||[])[index]?.imageUrl ?? "No proof"}</TableCell>
 
                         </TableRow>
                     )})}
