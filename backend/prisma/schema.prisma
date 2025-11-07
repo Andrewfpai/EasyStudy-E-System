@@ -20,7 +20,7 @@ model Student {
   hanziName      String?
   pinyinName     String?
   phoneNumber    String
-  email          String        @unique
+  email          String
   address        String
   joinedDate     DateTime      @default(now())
   tokenUsed      Int           @default(0)

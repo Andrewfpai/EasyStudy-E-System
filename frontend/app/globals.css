@@ -70,7 +70,7 @@
   --primary: oklch(0.6045 0.162 149.7);           /* Primary (#0d856c) */
   /* --primary-foreground: hsl(0 0% 100%);  white text on primary */
 
-  --secondary: oklch(0.8409 0.1696 88.44);          /* Secondary (#f8c311) */
+  --secondary: oklch(0.7487 0.151 87.36);          /* Secondary (#f8c311) */
   /* --secondary-foreground: hsl(0 0% 13.7%); Text on secondary */
 
   --button-bg: oklch(0.145 0 0);

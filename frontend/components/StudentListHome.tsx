@@ -196,7 +196,7 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
                   <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
                     student.status === "ACTIVE" ? "text-primary" :
                     student.status === "OUT" ? "text-red-600" :
-                    "text-primary"
+                    "text-secondary"
                   } min-w-32` }>{student.status}</TableCell>
                   <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
                     <Link href={`https://wa.me/${student.phoneNumber}`}>
