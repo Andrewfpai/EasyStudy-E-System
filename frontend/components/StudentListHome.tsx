@@ -48,7 +48,21 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
     setSortConfig({ key, direction });
   };
 
-  const sortedStudents = [...students].sort((a, b) => {
+  const filteredStudents = students.filter(student => {
+  // status filter
+    if (statusFilter.length > 0 && !statusFilter.includes(student.status)) return false;
+
+    // token remaining filter
+    if (tokenRemainingVal !== null) {
+      if (tokenRemainingOp === ">" && !(student.tokenRemaining > tokenRemainingVal)) return false;
+      if (tokenRemainingOp === "<" && !(student.tokenRemaining < tokenRemainingVal)) return false;
+      if (tokenRemainingOp === "=" && !(student.tokenRemaining === tokenRemainingVal)) return false;
+    }
+
+    return true; // keep this student
+  });
+
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
     if (!sortConfig) return 0;
 
     const key = sortConfig.key as keyof Student;

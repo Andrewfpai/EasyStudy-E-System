@@ -55,7 +55,7 @@ export default function Absensi({studentsInput}:AbsensiProps) {
         selectedStudents.map(async (student) => {
 
           // call backend
-          const updated = await subtractStudentTokens(student.id, -tokenInput);
+          const updated = await subtractStudentTokens(student.id, tokenInput);
 
           // return merged updated student
           return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };

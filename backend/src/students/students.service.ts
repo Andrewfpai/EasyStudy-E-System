@@ -100,7 +100,7 @@ export class StudentsService {
     const updatedStudent = await this.prisma.student.update({
       where: { id },
       data: {
-        tokenRemaining: { increment: tokenAmount },
+        tokenRemaining: { decrement: tokenAmount },
       },
       include: {
         tokenUsageHistory: true,
