@@ -401,7 +401,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.email}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 min-w-[300px] whitespace-normal">{student.address}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{formatForDisplay(student.birthDate).date}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.birthDate ? formatForDisplay(student.birthDate)?.date : "-"}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenUsed}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
                     <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
@@ -416,7 +416,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.education}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.schoolOrCompany}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.lessonPrice}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formatForDisplay(student?.updatedAt).date} (${formatForDisplay(student?.updatedAt).time})`}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.updatedAt ? `${formatForDisplay(student?.updatedAt).date} (${formatForDisplay(student?.updatedAt).time})` : "-"}</TableCell>
                   </TableRow>
                   )})}
               </TableBody>
