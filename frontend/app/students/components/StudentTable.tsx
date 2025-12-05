@@ -266,7 +266,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
               </div>
             </div>
 
-
+ 
           <div className="flex flex-col gap-2">
             <label className="text-gray-700 font-medium">Joined Date</label>
             <div className="grid gap-2 grid-cols-5">
@@ -351,9 +351,11 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     onClick={()=>{requestSort("pinyinName")}}
                   >Pinyin {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
+                  <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Jenis Kelamin</TableHead>
                   <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Email</TableHead>
                   <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Address</TableHead>
                   <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Phone</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Birthdate</TableHead>
                   <TableHead
                     className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
                     onClick={()=>{requestSort("tokenUsed")}}
@@ -370,6 +372,16 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     onClick={()=>{requestSort("joinedDate")}}
                   >Joined Date{sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
+                  <TableHead
+                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                    onClick={()=>{requestSort("startLevel")}}
+                  >Start Level{sortConfig?.key === "startLevel" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                  </TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Nama Orangtua</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">HP Orangtua</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Education</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Nama Sekolah</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Harga Les</TableHead>
                   <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Last Updated</TableHead>
                 </TableRow>
               </TableHeader>
@@ -385,18 +397,26 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.gender}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.email}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 min-w-[300px] whitespace-normal">{student.address}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{formatForDisplay(student.birthDate).date}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenUsed}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
                     <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                        student.status === "ACTIVE" ? "text-green-600" :
-                        student.status === "OUT" ? "text-red-600" :
-                        "text-yellow-600"
-                      } min-w-32` }>{student.status}</TableCell>
+                      student.status === "ACTIVE" ? "text-green-600" :
+                      student.status === "OUT" ? "text-red-600" :
+                      "text-yellow-600"
+                    } min-w-32` }>{student.status}</TableCell>
                     <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formattedDate?.date} (${formattedDate?.time})`}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student?.updatedAt || "-"}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.startLevel}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.parentName}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.parentPhone}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.education}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.schoolOrCompany}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.lessonPrice}</TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formatForDisplay(student?.updatedAt).date} (${formatForDisplay(student?.updatedAt).time})`}</TableCell>
                   </TableRow>
                   )})}
               </TableBody>

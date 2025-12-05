@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,19 +8,29 @@ datasource db {
 }
 
 model Student {
-  id             Int           @id @default(autoincrement())
-  name           String
-  hanziName      String?
-  pinyinName     String?
-  phoneNumber    String
-  email          String
-  address        String
-  joinedDate     DateTime      @default(now())
-  tokenUsed      Int           @default(0)
-  tokenRemaining Int
-  updatedAt      DateTime?     @updatedAt
-  status         StudentStatus @default(ACTIVE)
-  notes          String?
+  id              Int           @id @default(autoincrement())
+  name            String
+  hanziName       String?
+  pinyinName      String?
+  phoneNumber     String
+  email           String
+  address         String
+  joinedDate      DateTime      @default(now())
+  birthDate       DateTime?
+  startLevel      String?       @default("Basic")
+  gender          String?       @default("laki-laki")
+  parentName      String?
+  parentPhone     String?
+  education       String?
+  schoolOrCompany String?
+  mandarinGoal    String?
+  heardFrom       String?
+  lessonPrice     String?
+  tokenUsed       Int           @default(0)
+  tokenRemaining  Int
+  updatedAt       DateTime?     @updatedAt
+  status          StudentStatus @default(ACTIVE)
+  notes           String?
 
   // Relation to payment proofs
   payments          PaymentProof[]
@@ -38,7 +41,7 @@ model Student {
 model PaymentProof {
   id        Int      @id @default(autoincrement())
   studentId Int
-  imageUrl  String // Supabase URL of the uploaded image
+  imageUrl  String
   createdAt DateTime @default(now())
 
   student Student @relation(fields: [studentId], references: [id])
