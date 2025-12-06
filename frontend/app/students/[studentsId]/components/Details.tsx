@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Student } from "@/app/types/student";
 import { formatForDisplay } from "@/utils/date";
+import { addTokensWithPayment } from "@/lib/api";
 
 interface DetailsProps {
   studentsInput: Student;
@@ -10,9 +11,31 @@ interface DetailsProps {
 
 export default function Details({ studentsInput }:DetailsProps) {
   const [student, setStudent] = useState<Student>(studentsInput);
+
+  const [paymentUrl, setPaymentUrl] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [tokenInput, setTokenInput] = useState<number | null>(null);
  
   console.log("student: ",student)
 
+  const handleAddTokensWithPayment = async () => {
+  if (!tokenInput || loading) return;
+
+  setLoading(true);
+  try {
+    const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl);
+    setStudent(updated);
+    setTokenInput(null);
+    setPaymentUrl("");
+    alert("Tokens and payment recorded successfully!");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to add tokens/payment.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex flex-col w-full text-E-Black">
@@ -87,7 +110,29 @@ export default function Details({ studentsInput }:DetailsProps) {
             
           </div>
 
-
+          <div className="mt-4 flex gap-2">
+        <input
+          type="number"
+          value={tokenInput ?? ""}
+          onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
+          placeholder="Token amount"
+          className="border px-2 py-1 rounded w-32"
+        />
+        <input
+          type="text"
+          value={paymentUrl}
+          onChange={e => setPaymentUrl(e.target.value)}
+          placeholder="Payment image URL"
+          className="border px-2 py-1 rounded w-64"
+        />
+        <button
+          className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
+          onClick={handleAddTokensWithPayment}
+          disabled={loading}
+        >
+          Add Token & Payment
+        </button>
+      </div>
 
       </div>
       
