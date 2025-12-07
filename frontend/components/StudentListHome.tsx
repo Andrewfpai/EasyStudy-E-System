@@ -38,15 +38,27 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
   const [statusFilter, setStatusFilter] = useState<string[]>([]); 
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({key:"id", direction:"asc"});
 
+  const statusOptions = [
+  { label: "Aktif", value: "ACTIVE" },
+  { label: "Nonaktif", value: "TEMP_INACTIVE" },
+  { label: "Berhenti", value: "OUT" },
+];
+
   // const [search, setSearch] = useState(3);
 
-  const requestSort = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
+  const StatusAvatar = ({ status }) => {
+  const color =
+    status === "ACTIVE" ? "border-green-500"
+    : status === "TEMP_INACTIVE" ? "border-yellow-500"
+    : "border-red-500";
+
+  return (
+    <div className={`w-20 h-20 rounded-full border-2 ${color} flex items-center justify-center`}>
+      <div className="w-16 h-16 bg-white rounded-full"></div>
+    </div>
+  );
+};
+
 
   const filteredStudents = students.filter(student => {
   // status filter
@@ -100,14 +112,14 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
 
   // console.log("student:",students);
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4 text-E-Black ">
+    <div className="flex flex-col bg-[#FFFFFF] rounded-3xl  py-6 text-E-Black ">
       {/* Search input */}
     <div className="flex flex-col mb-5 px-6">
-      <div className="font-bold text-2xl">Student Reminder</div>
+      <div className="font-extrabold text-2xl">Pemantauan Murid</div>
 
-      <div className="flex flex-row gap-5 md:flex-col md:items-left lg:flex-row lg:items-center lg:gap-10 mt-5">
+      <div className="flex flex-row items-start gap-5 md:flex-col md:items-left lg:flex-row lg:items-center lg:gap-10 mt-6">
         <div className="flex flex-col gap-2 ">
-          <label className="text-gray-700 font-medium">Token Remaining</label>
+          <label className="font-medium xl:text-lg">Sisa Token</label>
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -133,22 +145,22 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
         </div>
 
         <div className="flex flex-col gap-3 ">
-          <label className="text-gray-700 font-medium -mt-2">Status</label>
+          <label className="font-medium -mt-2 xl:text-lg">Filter Status</label>
           <div className="flex gap-4">
-            {["ACTIVE", "TEMP_INACTIVE", "OUT"].map((s) => (
+            {statusOptions.map((s) => (
               <label
-                key={s}
-                className="flex items-center gap-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                key={s.value}
+                className="flex items-center gap-2 cursor-pointer"
               >
                 <Checkbox
-                  checked={statusFilter.includes(s)}
+                  checked={statusFilter.includes(s.value)}
                   onCheckedChange={(checked) => {
-                    if (checked) setStatusFilter([...statusFilter, s])
-                    else setStatusFilter(statusFilter.filter((st) => st !== s))
+                    if (checked) setStatusFilter([...statusFilter, s.value])
+                    else setStatusFilter(statusFilter.filter((st) => st !== s.value))
                   }}
-                  className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
+                  className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary cursor-pointer"
                 />
-                <span>{s}</span>
+                <span className="text-sm xl:text-base">{s.label}</span>
               </label>
             ))}
           </div>
@@ -158,70 +170,38 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
     </div>
 
 
-      <div className="overflow-auto border bg-gray-100 flex-1 max-h-[500px]">
-       
-          <Table className="w-full bg-white">
-            <TableHeader className="bg-gray-100 sticky top-0">
-              <TableRow>
-                <TableHead
-                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
-                  onClick={()=>{requestSort("id")}}
-                >ID {sortConfig?.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                </TableHead>
-                <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-                  onClick={()=>{requestSort("name")}}
-                >Name {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                </TableHead>
-                <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-                  onClick={()=>{requestSort("hanziName")}}
-                >Hanzi {sortConfig?.key === "hanziName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                </TableHead>
-                <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-                  onClick={()=>{requestSort("pinyinName")}}
-                >Pinyin {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                </TableHead>
-                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Phone</TableHead>
-                
-                <TableHead
-                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
-                  onClick={()=>{requestSort("tokenRemaining")}}
-                >Tokens Remaining{sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                </TableHead>
-                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Status</TableHead>
-                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Contact</TableHead>
-                
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-                {sortedStudents.map(student => (
-                <TableRow 
-                  key={student.id}
-                  // onClick={() => router.push(`/students/${student.id}`)}
-                >
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
-                  <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                    student.status === "ACTIVE" ? "text-primary" :
-                    student.status === "OUT" ? "text-red-600" :
-                    "text-secondary"
-                  } min-w-32` }>{student.status}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
-                    <Link href={`https://wa.me/${student.phoneNumber}`}>
-                      <button className="underline hover:opacity-40 hover:no-underline cursor-pointer">Hubungi Murid</button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </div>
+
+      <div className="grid grid-cols-3 gap-x-8 gap-y-6 xl:grid-cols-4 px-6">
+        {sortedStudents.map(student => (
+          <div
+            key={student.id}
+            className="flex flex-col items-center bg-[#F7F7F7] text-center rounded-2xl min-w-[175px] min-h-[300px] lg:min-h-[275px] p-6"
+          >
+            {/* Avatar */}
+            <StatusAvatar status={student.status} />
+
+
+
+            {/* Name & Token */}
+            <div className="mt-4 font-bold text-sm xl:text-base">{student.name}</div>
+            <div className="mt-2 text-sm xl:text-base">Sisa Token: {student.tokenRemaining}</div>
+
+            {/* Spacer pushes button to bottom */}
+            <div className="flex-1"></div>
+
+            {/* Button */}
+            
+
+            <Link href={`https://wa.me/${student.phoneNumber}`} className="py-3 min-w-full bg-E-gray-b rounded-lg text-xs xl:text-base font-semibold cursor-pointer border hover:border-E-gray-b hover:bg-transparent"> 
+              <button >
+                Hubungi Murid
+              </button>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+      
    
       
     </div>
