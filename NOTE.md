@@ -2,10 +2,14 @@
 
 ## OKLCH Color Values
 
-| Color                   | Preview                                                                                                      | Hex       | OKLCH Value                   | Description                                          |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------ | --------- | ----------------------------- | ---------------------------------------------------- |
-| **Primary Green**       | <div style="width:20px;height:20px;background-color:#149b48;border-radius:4px;border:1px solid #ccc;"></div> | `#149b48` | `oklch(55.0% 0.45 133.3)`     | Main brand color for buttons, links, and highlights  |
-| **Secondary Yellow**    | <div style="width:20px;height:20px;background-color:#f8c311;border-radius:4px;border:1px solid #ccc;"></div> | `#f8c311` | `oklch(91.5% 0.15 104.0)`     | Accent color for CTAs, icons, and hover states       |
-| **Accent / Background** | <div style="width:20px;height:20px;background-color:#f5f5f7;border-radius:4px;border:1px solid #ccc;"></div> | `#f5f5f7` | `oklch(0.9707 0.0027 286.35)` | Page background for a clean, modern look             |
-| **Text / Dark**         | <div style="width:20px;height:20px;background-color:#2a2a2a;border-radius:4px;border:1px solid #ccc;"></div> | `#2a2a2a` | `oklch(17.5% 0.00 0.0)`       | Main text color, elegant and soft                    |
-| **Muted Gray**          | <div style="width:20px;height:20px;background-color:#a0a0a0;border-radius:4px;border:1px solid #ccc;"></div> | `#a0a0a0` | `oklch(0.7058 0 0)`           | Low-contrast gray for secondary text or placeholders |
+| Color                      | Preview                                                                                                      | Hex       | OKLCH Value                   | Description                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ | --------- | ----------------------------- | ------------------------------------------------------ |
+| **Primary Green**          | <div style="width:20px;height:20px;background-color:#139B48;border-radius:4px;border:1px solid #ccc;"></div> | `#139B48` | `oklch(0.6044 0.1622 149.75)` | Main brand color for buttons, links, and highlights    |
+| **Secondary Yellow**       | <div style="width:20px;height:20px;background-color:#f8c311;border-radius:4px;border:1px solid #ccc;"></div> | `#f8c311` | `oklch(0.8409 0.1696 88.44)`  | Accent color for CTAs, icons, and hover states         |
+| **Tertiary Red**           | <div style="width:20px;height:20px;background-color:#f8c311;border-radius:4px;border:1px solid #ccc;"></div> | `#f82a37` | `oklch(0.6315 0.2357 24.9)`   | Status Out                                             |
+| **Main Background**        | <div style="width:20px;height:20px;background-color:#f7f7f7;border-radius:4px;border:1px solid #ccc;"></div> | `#f7f7f7` | `oklch(0.9761 0 0);`          | Main Background color, dashboard card background color |
+| **Card Button Background** | <div style="width:20px;height:20px;background-color:#a0a0a0;border-radius:4px;border:1px solid #ccc;"></div> | `#DADADA` | `oklch(0.8884 0 0)`           | Low-contrast gray for secondary text or placeholders   |
+
+<!-- ONE TIME USE -->
+
+| **Main Background** | <div style="width:20px;height:20px;background-color:#f7f7f7;border-radius:4px;border:1px solid #ccc;"></div> | `#f7f7f7` | `oklch(0.9761 0 0);` | Main Background color, dashboard card background color |

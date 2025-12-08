@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { formatDateToISO, formatForDisplay } from "@/utils/date";
+import { CalendarDays, CalendarSearch, ListFilter, Search} from 'lucide-react';
+
 
 interface StudentTableProps {
   studentsInput: Student[];
@@ -55,6 +57,13 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
+
+  const filtersActive =
+    tokenUsedVal !== null ||
+    tokenRemainingVal !== null ||
+    statusFilter.length > 0 ||
+    joinedDateVal !== "";
+
 
   const requestSort = (key: string) => {
     let direction: "asc" | "desc" = "asc";
@@ -166,38 +175,44 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
   console.log("student:",students);
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg py-4 text-E-black bg-background">
+    <div className="flex flex-col bg-white rounded-lg py-4 text-E-black ">
 
-      <div className="flex flex-row items-center justify-between mb-5 px-6">
-        <div className="font-bold text-2xl">Student Table</div>
+      <div className="flex flex-row items-center justify-between  mb-5 px-6 ">
+        <div className="font-extrabold text-2xl">Data Murid</div>
         <div className="">
           <div className="flex flex-row gap-4">
+            <div className=" ">
             <button
-                className="px-4 py-2 bg-primary text-E-white rounded-md"
+                className={`flex flex-row items-center gap-2 px-4 py-2 border-2 border-E-gray-b text-E-black rounded-lg cursor-pointer ${filterOpen?"border-primary":""}`}
                 onClick={() => setFilterOpen(!filterOpen)}
-              > Filters </button>
+              > <ListFilter className="w-5 h-5"/>Filter 
+            </button>
+            </div>
+            <div className="relative w-full bg-background rounded-lg">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
 
               <input
                 type="text"
-                placeholder="Search by Name, Hanzi, or Pinyin"
+                placeholder="Cari nama..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="px-4 py-2 border border-E-muted-gray rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary"
+                className="pl-10 pr-4 py-2 w-full border-2 border-E-gray-b rounded-lg focus:border-2 focus:border-primary placeholder:text-sm"
               />
+            </div>
+
           </div>
 
           <div className={`${filterOpen ? 'opacity-100 visible' : 'opacity-0 invisible'} 
-            transition-opacity duration-300 ease-in-out flex flex-col bg-white rounded-xl p-6 space-y-5 
+            transition-opacity duration-300 ease-in-out flex flex-col bg-white rounded-2xl p-6 space-y-6 
             absolute z-20 mt-4 shadow-lg -ml-36 min-w-72`}>
 
             <div className="flex flex-col gap-2">
-              <label className="text-gray-700 font-medium">Token Used</label>
+              <label className="font-bold">Token Terpakai</label>
               <div className="flex gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <div className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
-
-                    {tokenUsedOp}
+                    <div className="flex-1 border border-E-gray-b rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
+                      {tokenUsedOp}
                     </div>
                   </DropdownMenuTrigger>
                    <DropdownMenuContent>
@@ -210,18 +225,18 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                   type="number"
                   value={tokenUsedVal ?? ""}
                   onChange={(e) => setTokenUsedVal(e.target.value ? parseInt(e.target.value) : null)}
-                  className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Value"
+                  className="flex-1 border border-E-gray-b rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+                  placeholder="Masukkan token terpakai"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-gray-700 font-medium">Token Remaining</label>
+              <label className="font-bold">Token Sisa</label>
               <div className="flex gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <div className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <div className="flex-1 border border-E-gray-b rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
 
                     {tokenRemainingOp}
                     </div>
@@ -236,8 +251,8 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                   type="number"
                   value={tokenRemainingVal ?? ""}
                   onChange={(e) => setTokenRemainingVal(e.target.value ? parseInt(e.target.value) : null)}
-                  className="flex-1 border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Value"
+                  className="flex-1 border border-E-gray-b rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+                  placeholder="Masukkan token sisa"
                 />
               </div>
             </div>
@@ -245,12 +260,12 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
             
 
             <div className="flex flex-col gap-2">
-              <label className="text-gray-700 font-medium">Status</label>
+              <label className="font-bold">Status</label>
               <div className="flex gap-4">
-                {["ACTIVE", "TEMP_INACTIVE", "OUT"].map((s) => (
+                {["Aktif", "Nonaktif", "Keluar"].map((s) => (
                   <label
                     key={s}
-                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer text-sm font-medium"
                   >
                     <Checkbox
                       checked={statusFilter.includes(s)}
@@ -258,7 +273,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                         if (checked) setStatusFilter([...statusFilter, s])
                         else setStatusFilter(statusFilter.filter((st) => st !== s))
                       }}
-                      className="w-5 h-5 border-[1.5px] border-E-muted-gray data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
+                      className="w-5 h-5 border border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary cursor-pointer"
                     />
                     <span>{s}</span>
                   </label>
@@ -268,13 +283,13 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
  
           <div className="flex flex-col gap-2">
-            <label className="text-gray-700 font-medium">Joined Date</label>
+            <label className="font-bold">Tanggal Bergabung</label>
             <div className="grid gap-2 grid-cols-5">
               <div className="col-span-2 ">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div className="w-full flex border border-E-muted-gray rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
-                      {joinedDateOp === ">" ? "After" : "Before"}
+                    <div className="text-sm w-full flex border border-E-gray-b rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary">
+                      {joinedDateOp === ">" ? "Setelah" : "Sebelum"}
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -287,9 +302,10 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <button
-                    className="col-span-3 flex items-center justify-between border border-E-muted-gray rounded-md px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-primary"
+                    className={`${joinedDateVal?"":"text-E-gray"} text-sm col-span-3 flex items-center justify-between border border-E-gray-b rounded-lg px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-primary`}
                   >
-                    {joinedDateVal ? joinedDateVal : "Pick a date"}
+                    {joinedDateVal ? joinedDateVal : "Pilih Tanggal"}
+                    <CalendarSearch className="w-5 h-5 text-black"/>
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -311,9 +327,13 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
             </div>
           </div>
 
-          <div>
+          <div className="">
             <button 
-            className="px-4 py-2 bg-primary text-E-white rounded-md  " 
+            className={`px-8 py-2 rounded-lg
+              ${filtersActive 
+                ? "bg-primary text-white cursor-pointer" 
+                : "bg-E-gray-b text-E-gray cursor-not-allowed"
+              }`}
             onClick={()=>{resetFilters()}}>Reset</button>
           </div>
           </div>
@@ -326,97 +346,100 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
 
         
-        <div className="overflow-auto border bg-gray-100 flex-1">
-          <div className="max-w-vw overflow-auto max-h-[500px] rounded-md">
-            <Table className="w-full bg-white">
-              <TableHeader className="bg-gray-100">
-                <TableRow>
+        <div className="overflow-auto flex-1 px-6 ">
+          <div className="max-w-vw overflow-x-auto overflow-y-auto max-h-[500px] rounded-md">
+            <Table className="w-full">
+              <TableHeader className="text-E-gray ">
+                <TableRow className="">
                   <TableHead
-                    className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                    className="px-6 py-3 text-center text-sm font-semibold  cursor-pointer" 
                     onClick={()=>{requestSort("id")}}
                   >ID {sortConfig?.key === "id" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
                   <TableHead
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                    className="px-6 py-3 text-left text-sm font-semibold  cursor-pointer" 
                     onClick={()=>{requestSort("name")}}
-                  >Name {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                  >Nama {sortConfig?.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
                   <TableHead
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                    className="px-6 py-3 text-left text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("hanziName")}}
                   >Hanzi {sortConfig?.key === "hanziName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
-                  <TableHead
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  {/* <TableHead
+                    className="px-6 py-3 text-left text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("pinyinName")}}
                   >Pinyin {sortConfig?.key === "pinyinName" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                  </TableHead>
-                  <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Jenis Kelamin</TableHead>
-                  <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Email</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Address</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Phone</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Birthdate</TableHead>
-                  <TableHead
-                    className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                  </TableHead> */}
+                  {/* <TableHead className="px-8 py-3 text-left text-sm font-semibold cursor-pointer">Jenis Kelamin</TableHead> */}
+                  {/* <TableHead className="px-8 py-3 text-left text-sm font-semibold cursor-pointer">Email</TableHead> */}
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Address</TableHead> */}
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Phone</TableHead>
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Birthdate</TableHead> */}
+                  {/* <TableHead
+                    className="px-6 py-3 text-center text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("tokenUsed")}}
                   >Tokens Used{sortConfig?.key === "tokenUsed" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                  </TableHead>
+                  </TableHead> */}
                   <TableHead
-                    className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                    className="px-6 py-3 text-center text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("tokenRemaining")}}
-                  >Tokens Remaining{sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                  >Sisa Token{sortConfig?.key === "tokenRemaining" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
-                  <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Status</TableHead>
-                  <TableHead
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  <TableHead className="px-6 py-3 text-center text-sm font-semibold cursor-pointer">Tipe Harga</TableHead>
+                  {/* <TableHead
+                    className="px-6 py-3 text-left text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("joinedDate")}}
-                  >Joined Date{sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
-                  </TableHead>
+                    >Joined Date{sortConfig?.key === "joinedDate" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                    </TableHead> */}
+                  <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Harga Les</TableHead>
                   <TableHead
-                    className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                    className="px-6 py-3 text-left text-sm font-semibold cursor-pointer" 
                     onClick={()=>{requestSort("startLevel")}}
                   >Start Level{sortConfig?.key === "startLevel" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
                   </TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Nama Orangtua</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">HP Orangtua</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Education</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Nama Sekolah</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Harga Les</TableHead>
-                  <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Last Updated</TableHead>
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Nama Orangtua</TableHead> */}
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">HP Orangtua</TableHead> */}
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Education</TableHead> */}
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Nama Sekolah</TableHead> */}
+                  {/* <TableHead className="px-6 py-3 text-left text-sm font-semibold cursor-pointer">Last Updated</TableHead> */}
+                  <TableHead className="px-6 py-3 text-center text-sm font-semibold cursor-pointer">Detail</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="border border-background">
                   {sortedStudents.map(student => {
                   const formattedDate = formatForDisplay(student?.joinedDate)
                   return (
                   <TableRow 
                     key={student.id}
-                    onClick={() => router.push(`/students/${student.id}`)}
+                    
+                    className="border border-background"
                   >
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.gender}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.email}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 min-w-[300px] whitespace-normal">{student.address}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.phoneNumber}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.birthDate ? formatForDisplay(student.birthDate)?.date : "-"}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenUsed}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
-                    <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                      student.status === "ACTIVE" ? "text-green-600" :
-                      student.status === "OUT" ? "text-red-600" :
-                      "text-yellow-600"
-                    } min-w-32` }>{student.status}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{`${formattedDate?.date} (${formattedDate?.time})`}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.startLevel}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.parentName}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.parentPhone}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.education}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.schoolOrCompany}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.lessonPrice}</TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-600">{student.updatedAt ? `${formatForDisplay(student?.updatedAt).date} (${formatForDisplay(student?.updatedAt).time})` : "-"}</TableCell>
+                    <TableCell className="px-6 py-4 text-center">{student.id}</TableCell>
+                    <TableCell className="px-6 py-4">{student.name}</TableCell>
+                    <TableCell className="px-6 py-4">{student.hanziName}</TableCell>
+                    {/* <TableCell className="px-6 py-4">{student.pinyinName}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 text-center">{student.gender}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4">{student.email}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 min-w-[300px] whitespace-normal">{student.address}</TableCell> */}
+                    <TableCell className="px-6 py-4">{student.phoneNumber}</TableCell>
+                    {/* <TableCell className="px-6 py-4">{student.birthDate ? formatForDisplay(student.birthDate)?.date : "-"}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 text-center">{student.tokenUsed}</TableCell> */}
+                    <TableCell className="px-6 py-4 text-center">{student.tokenRemaining}</TableCell>
+                    <TableCell className={`px-6 py-4 font-semibold text-center min-w-32` }>{student.tipeHarga}</TableCell>
+                    {/* <TableCell className="px-6 py-4">{`${formattedDate?.date} (${formattedDate?.time})`}</TableCell> */}
+                    <TableCell className="px-6 py-4 text-center">{student.lessonPrice}</TableCell>
+                    <TableCell className="px-6 py-4 text-center">{student.startLevel}</TableCell>
+                    <TableCell 
+                      onClick={() => router.push(`/students/${student.id}`)}
+                      className="px-6 py-4 text-center font-semibold underline hover:no-underline cursor-pointer"
+                      >Lihat Detail
+                      </TableCell>
+                    {/* <TableCell className="px-6 py-4 text-center">{student.parentName}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 text-center">{student.parentPhone}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 text-center">{student.education}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4 text-center">{student.schoolOrCompany}</TableCell> */}
+                    {/* <TableCell className="px-6 py-4">{student.updatedAt ? `${formatForDisplay(student?.updatedAt).date} (${formatForDisplay(student?.updatedAt).time})` : "-"}</TableCell> */}
                   </TableRow>
                   )})}
               </TableBody>

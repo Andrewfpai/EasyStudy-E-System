@@ -26,9 +26,9 @@ export default function Info({ studentsInput }: InfoProps) {
   const [tokenInput, setTokenInput] = useState<number | null>(null)
 
   const STATUS = [
-    { value: "ACTIVE", display: "Active" },
-    { value: "TEMP_INACTIVE", display: "Temp Inactive" },
-    { value: "OUT", display: "Out" },
+    { value: "Aktif", display: "Aktif" },
+    { value: "Nonaktif", display: "Nonaktif" },
+    { value: "Keluar", display: "Keluar" },
   ] as const
 
   const handleFieldChange = <K extends keyof Student>(field: K, value: Student[K]) => {

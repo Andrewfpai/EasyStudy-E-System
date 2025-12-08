@@ -29,42 +29,35 @@ export default function TokenHistory({ studentsInput }: TokenHistoryProps) {
   return (
 
    
-<div className="flex-[3] min-w-0">
-            <h2 className="font-semibold text-xl mt-5 mb-5">Token Add History</h2>
-        <div className="overflow-auto max-h-[500px] rounded-md">
-
-            <div className="overflow-auto max-h-[500px] rounded-md border">
-                <Table className="w-full bg-white ">
-                <TableHeader className="bg-gray-100">
-                    <TableRow>
-                    
-                    <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Date</TableHead>
-                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Amount</TableHead>
-                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Invoice</TableHead>
-                    
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    
-                    {(student?.tokenAddHistory || [])?.map((tokenAdd, index)=>{
+<div className="flex flex-col w-full">
+      <div className="flex flex-col bg-white rounded-2xl py-4 mt-8 ">
+      <h2 className="font-extrabold text-2xl px-6">Riwayat Pembayaran</h2>
+      <div className="overflow-auto max-h-[500px] mx-6 mt-4">
+        <Table className="w-full bg-white">
+          <TableHeader className="">
+            <TableRow className="grid grid-cols-3 text-E-gray">
+              <TableHead className="px-6 py-3 text-left  font-semibold cursor-pointer">Tanggal & Waktu</TableHead>
+              <TableHead className="px-6 py-3  font-semibold cursor-pointer">Invoice</TableHead>
+              <TableHead className="px-6 py-3 text-center   font-semibold cursor-pointer">Penambahan Token</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className=" border border-background">
+            {(student?.tokenAddHistory || [])?.map((tokenAdd, index)=>{
                         const formatted = formatForDisplay(tokenAdd.createdAt);
                         console.log(formatted)
                         return (
-                        <TableRow key={index}>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{formatted?.date}{` (${formatted?.time})`}</TableCell>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600">{tokenAdd?.tokenAmount ?? "No proof"}</TableCell>
-                            <TableCell className="px-6 py-4 text-sm text-gray-600">{(student?.payments||[])[index]?.imageUrl ?? "No proof"}</TableCell>
+                        <TableRow className="grid grid-cols-3 border border-background" key={index}>
+                            <TableCell className="px-6 py-4 font-semibold">{formatted?.date}{` (${formatted?.time})`}</TableCell>
+                            <TableCell className="px-6 py-4 ">{(student?.payments||[])[index]?.imageUrl ?? "No proof"}</TableCell>
+                            <TableCell className="px-6 py-4 text-center">{tokenAdd?.tokenAmount ?? "No proof"}</TableCell>
 
                         </TableRow>
                     )})}
-        
-                </TableBody>
-                </Table>
-            </div>
-        </div>
-
-        
-</div>
+          </TableBody>
+        </Table>
+      </div>
+      </div>
+    </div>
 
   );
 }

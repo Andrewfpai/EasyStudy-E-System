@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Geist, Geist_Mono, Manrope } from 'next/font/google'
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 
-const inter = Inter({
+const manrope = Manrope({
   variable: "--font-inter",
   subsets: ["latin"],
 });
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistSans.variable} antialiased`}>
+    <html lang="en" className={`${manrope.variable} ${geistSans.variable} antialiased`}>
       <body
         
       >

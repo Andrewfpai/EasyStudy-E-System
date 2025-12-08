@@ -48,7 +48,8 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
     mandarinGoal: "",
     heardFrom:"",
     lessonPrice:"",
-    status: "ACTIVE" as 'ACTIVE' | 'OUT' | 'TEMP_INACTIVE',
+    status: "Aktif" as 'Aktif' | 'Nonaktif' | 'Keluar',
+    tipeHarga: "Lama" as 'Lama' | 'Baru',
     notes: "",
   });
 
@@ -60,6 +61,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
       ...form,
       mandarinGoal: form.mandarinGoal === "Lainnya" ? customMandarinGoal : form.mandarinGoal,
       heardFrom: form.heardFrom === "Lainnya" ? customHeardFrom : form.heardFrom,
+      tipeHarga: form.tipeHarga,
     };
 
     await addStudent(studentData);
@@ -86,7 +88,8 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
       mandarinGoal: "",
       heardFrom: "",
       lessonPrice: "",
-      status: "ACTIVE",
+      status: "Aktif",
+      tipeHarga: "Lama",
       notes: "",
     });
 
@@ -181,6 +184,24 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           </SelectContent>
         </Select>
       </div>
+
+      {/* Tipe Harga */}
+      <div className="flex flex-col">
+        <label className="mb-2 text-gray-700 font-semibold">Tipe Harga</label>
+        <Select
+          value={form.tipeHarga}
+          onValueChange={value => setForm({ ...form, tipeHarga: value as 'Lama' | 'Baru' })}
+        >
+          <SelectTrigger className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition">
+            <SelectValue placeholder="Select tipe harga" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Lama">Lama</SelectItem>
+            <SelectItem value="Baru">Baru</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
 
 
       {/* Start Level Mandarin */}

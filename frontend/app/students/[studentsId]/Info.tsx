@@ -24,6 +24,9 @@ export default function Info({ studentsInput }: InfoProps) {
             case 2:
                 setTab(2)
                 break;
+            case 3:
+                setTab(3)
+                break;
             default:
                 setTab(1)
 
@@ -33,15 +36,16 @@ export default function Info({ studentsInput }: InfoProps) {
     console.log(tab)
   return (
     <div className="mt-5 text-E-black">
-        <div className="grid grid-cols-4 lg:grid-cols-5 items-center gap-5 text-center mb-2">
-            <div onClick={()=>handleTab(1)} className={`${tab===1?"text-E-black":"text-E-muted-gray"}`}>Basic Info</div>
-            <div onClick={()=>handleTab(2)} className={`${tab===2?"text-E-black":"text-E-muted-gray"}`}>Token Info</div>
+        <div className="grid grid-cols-3 xl:grid-cols-5 items-center gap-5 text-center mb-2">
+            <div onClick={()=>handleTab(1)} className={`${tab===1?"text-E-black font-bold":"text-E-gray"} cursor-pointer`}>Informasi Data Diri</div>
+            <div onClick={()=>handleTab(2)} className={`${tab===2?"text-E-black font-bold":"text-E-gray"} cursor-pointer`}>Riwayat Kehadiran</div>
+            <div onClick={()=>handleTab(3)} className={`${tab===3?"text-E-black font-bold":"text-E-gray"} cursor-pointer`}>Riwayat Pembayaran</div>
         </div>
         
         {/* Line Slider */}
         <div className="relative grid grid-cols-4 lg:grid-cols-5 items-center gap-5 ">
-            <div className={`col-span-1 border-b-3 border-E-black rounded-lg absolute bottom-0 left-0 w-1/4 lg:w-1/5 transition-transform duration-300`} 
-                style={{ transform: `translateX(${tab === 1 ? 0 : 100}%)` }}
+            <div className={`col-span-1 border-b-5 border-secondary rounded-lg absolute bottom-0 left-0 w-1/3 xl:w-1/5 transition-transform duration-300`} 
+                style={{ transform: `translateX(${tab === 1 ? 0 : tab === 2 ? 100 : 200}%)`}}
             ></div>
         </div>
 
@@ -52,13 +56,12 @@ export default function Info({ studentsInput }: InfoProps) {
         <div>
   {tab === 1 ? (
     student && <Details studentsInput={student} />
-  ) : (
-    student && 
-    <div className="flex flex-row gap-8">
-        <TokenAttendance studentsInput={student} />
-        <TokenHistory studentsInput={student} />
+  ) : tab===2? (
+    student && <TokenAttendance studentsInput={student} />
+  ):(
+    student && <TokenHistory studentsInput={student} />
         
-    </div>
+
   )}
 </div>
     </div>

@@ -20,7 +20,8 @@ export interface Student {
   heardFrom?: string;
   lessonPrice?: string; // <-- added field
   updatedAt?: string;
-  status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
+  status: "Aktif" | "Nonaktif" | "Keluar";
+  tipeHarga: "Lama" | "Baru",
   notes: string | null;
 
   // extra fields returned by API

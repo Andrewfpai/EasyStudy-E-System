@@ -25,26 +25,27 @@ export default function TokenAttendance({ studentsInput }: TokenAttendanceProps)
   console.log(student)
 
   return (
-    <div className="flex-[2] min-w-0 text-E-black">
-      <h2 className="font-semibold text-xl mt-5 mb-5">Attendance Record</h2>
-      <div className="overflow-auto max-h-[500px] rounded-md bg-gray-100 border">
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col bg-white rounded-2xl py-4 mt-8 ">
+      <h2 className="font-extrabold text-2xl px-6">Riwayat Kehadiran</h2>
+      <div className="overflow-auto max-h-[500px] mx-6 mt-4">
         <Table className="w-full bg-white">
-          <TableHeader className="bg-gray-100">
-            <TableRow>
-              <TableHead className="px-8 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Date</TableHead>
-              <TableHead className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer">Token Amount</TableHead>
+          <TableHeader className="">
+            <TableRow className="grid grid-cols-4 text-E-gray">
+              <TableHead className="px-6 py-3 text-left  font-semibold cursor-pointer">Tanggal & Waktu</TableHead>
+              <TableHead className="px-6 py-3 text-center  font-semibold cursor-pointer">Jumlah Token</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="border border-background">
             {(student?.tokenUsageHistory|| []).map((tokenUsage, index) => {
               const formatted = formatForDisplay(tokenUsage?.createdAt);
               return (
-                <TableRow key={index}>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">
+                <TableRow key={index} className="grid grid-cols-4 border border-background">
+                  <TableCell className="px-6 py-4 font-semibold">
                     {formatted?.date} ({formatted?.time})
                   </TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">
-                    {tokenUsage?.tokenAmount ?? "No proof"}
+                  <TableCell className="px-6 py-4 text-center">
+                    {tokenUsage?.tokenAmount ?? "-"}
                   </TableCell>
                 </TableRow>
               );
@@ -52,7 +53,7 @@ export default function TokenAttendance({ studentsInput }: TokenAttendanceProps)
           </TableBody>
         </Table>
       </div>
+      </div>
     </div>
   );
 }
-

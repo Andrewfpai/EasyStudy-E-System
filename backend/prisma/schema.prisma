@@ -29,7 +29,8 @@ model Student {
   tokenUsed       Int           @default(0)
   tokenRemaining  Int
   updatedAt       DateTime?     @updatedAt
-  status          StudentStatus @default(ACTIVE)
+  status          StudentStatus @default(Aktif)
+  tipeHarga       TipeHarga?
   notes           String?
 
   // Relation to payment proofs
@@ -65,7 +66,12 @@ model TokenAddedDate {
 }
 
 enum StudentStatus {
-  ACTIVE
-  OUT
-  TEMP_INACTIVE
+  Aktif
+  Nonaktif
+  Keluar
+}
+
+enum TipeHarga {
+  Lama
+  Baru
 }

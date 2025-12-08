@@ -14,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Search } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AbsensiProps {
   studentsInput: Student[];
@@ -81,18 +83,22 @@ export default function Absensi({studentsInput}:AbsensiProps) {
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
   return (
-    <div className="flex flex-col bg-gray-200 rounded-lg shadow-md py-4 text-E-black">
+    <div className="flex flex-col bg-white rounded-lg shadow-md py-4 text-E-black">
       <div className="flex flex-col px-6">
-        <div className="font-bold text-2xl">Student Attendance</div>
+        <div className="font-extrabold text-2xl">Catatan Kehadiran</div>
         
         <div className="grid grid-cols-5 gap-5 mt-5">
-          <input
-            type="text"
-            placeholder="Search by Name, Hanzi, or Pinyin"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="px-4 py-2 col-span-3 border border-gray-400 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-          />
+          <div className="relative w-full col-span-2 bg-background rounded-lg">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+
+              <input
+                type="text"
+                placeholder="Cari nama..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full border-2 border-E-gray-b rounded-lg focus:border-2 focus:border-primary placeholder:text-sm"
+              />
+            </div>
 
           {/* Token Controls */}
           <div className="grid grid-cols-4 col-span-2 flex items-center gap-2">
@@ -101,11 +107,15 @@ export default function Absensi({studentsInput}:AbsensiProps) {
               value={tokenInput ?? ""}
               onChange={e => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
               placeholder="Token amount"
-              className="px-4 py-2 col-span-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+              className="px-4 py-2.5 col-span-2 border border-E-gray-b rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary placeholder:text-sm"
             />
             <div className="col-span-2">
               <button
-                className="bg-red-500  text-E-white px-4 py-2.5 rounded-lg disabled:opacity-50"
+                className={`px-4 py-2.5 rounded-lg
+              ${tokenInput 
+                ? "bg-primary text-white cursor-pointer" 
+                : "bg-E-gray-b text-E-gray cursor-not-allowed"
+              }`}
                 onClick={() => subtractTokens()}
                 disabled={loading}
               >
@@ -118,68 +128,59 @@ export default function Absensi({studentsInput}:AbsensiProps) {
         </div>
       </div>
 
-      <div className="overflow-auto border bg-gray-100 flex-1 mt-5">
+      <div className="overflow-auto flex-1 mt-5 px-6 ">
         <div className="max-w-vw overflow-auto max-h-[500px] rounded-md">
-          <Table className="w-full bg-white">
-            <TableHeader className="bg-gray-100">
+          <Table className="w-full">
+            <TableHeader className="text-E-gray">
               <TableRow>
-                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Select</TableHead>
+                <TableHead className="py-3 text-center text-sm font-semibold  cursor-pointer">Select</TableHead>
                 <TableHead
-                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                  className="px-6 py-3 text-center text-sm font-semibold  cursor-pointer" 
                   
                 >ID
                 </TableHead>
                 <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  className="px-6 py-3 text-left text-sm font-semibold  cursor-pointer" 
                   
                 >Name 
                 </TableHead>
                 <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
+                  className="px-6 py-3 text-left text-sm font-semibold  cursor-pointer" 
                  
                 >Hanzi 
                 </TableHead>
-                <TableHead
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer" 
-                  
-                >Pinyin 
-                </TableHead>
+          
                 
                 <TableHead
-                  className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer" 
+                  className="px-6 py-3 text-center text-sm font-semibold  cursor-pointer" 
                   
                 >Tokens Remaining
                 </TableHead>
-                <TableHead className="px-6 py-3 text-center text-sm font-semibold text-gray-700 cursor-pointer">Status</TableHead>
                 
               </TableRow>
             </TableHeader>
-            <TableBody>
-                {sortedStudents.map(student => {
+            <TableBody className="border border-background">
+                {sortedStudents.map((student, index) => {
                   const isSelected = selectedStudents.some(s => s.id === student.id);
                   return (
                 <TableRow 
-                  key={student.id}
+                  key={index}
                   // onClick={() => router.push(`/students/${student.id}`)}
+                    className={`border border-background ${
+                index % 2 === 0 ?"bg-background" : ""}`}
                 >
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center ">
-                    <input
-                      type="checkbox"
+                  <TableCell className="py-4 !pl-0 text-sm  text-center ">
+                    <Checkbox
                       checked={isSelected}
-                      onChange={() => toggleSelect(student)}
-                      className=" border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary"
+                      onCheckedChange={() => toggleSelect(student)}
+                      className=" w-5 h-5 border-2 border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary cursor-pointer"
                     />
                   </TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.id}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.name}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.hanziName}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600">{student.pinyinName}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-gray-600 text-center">{student.tokenRemaining}</TableCell>
-                  <TableCell className={`px-6 py-4 text-sm font-semibold text-center  ${
-                    student.status === "ACTIVE" ? "text-primary" :
-                    student.status === "OUT" ? "text-red-600" :
-                    "text-secondary"
-                  } min-w-32` }>{student.status}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm  text-center">{student.id}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm ">{student.name}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm ">{student.hanziName}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm  text-center">{student.tokenRemaining}</TableCell>
+                 
                 </TableRow>
                   );
                 })}

@@ -6,6 +6,7 @@
    import Info from "./Info";
    import Image from 'next/image';
    import ProfilePicture from "@/assets/profilePicture.png";
+   import { Phone, SquarePen } from "lucide-react";
 
    // Use the complete Student interface from lib/api.ts
    interface Student {
@@ -43,8 +44,9 @@
              <div className="w-px h-5 bg-gray-300 mx-2"></div>
              <div className="font-semibold text-lg">Student Information</div>
            </div>
-           <div className="flex flex-row">
+      
              <div className="flex flex-col">
+
                <div className="relative w-28 h-28">
                  <Image
                    src={ProfilePicture}
@@ -52,27 +54,41 @@
                    fill
                    className="rounded-full object-cover"
                  />
-               </div>
-               <div className="flex flex-row">
-                 <div className="text-xl font-semibold mt-2">{student?.name}</div>
                  <div
-                   className={`h-5 w-5 rounded-full ml-1 ${
-                     student.status === "ACTIVE"
+                   className={`absolute bottom-1.5 right-2 h-6 w-6 rounded-full ml-1 ${
+                     student.status === "Aktif"
                        ? "bg-primary"
-                       : student.status === "OUT"
-                       ? "bg-red-600"
+                       : student.status === "Keluar"
+                       ? "bg-tertiary"
                        : "bg-secondary"
                    }`}
                  ></div>
                </div>
-               <div className="text-E-muted-gray">{student?.email}</div>
-             </div>
-             <div className="flex items-end ml-5">
-               <div className="bg-secondary text-white px-4 py-1 rounded disabled:opacity-50 text-lg">
-                 <Link href={`/students/${student.id}/edit`}>Edit</Link>
+
+              <div className="flex flex-row mt-5">
+               <div className="flex flex-col gap-2">
+                  <div className="text-2xl font-extrabold ">{student?.name}</div>
+                  <div className="text-xl font-medium text-E-gray">{student?.email}</div>
                </div>
+
+              <div className="flex flex-row items-center ml-5 gap-3">
+                <div>
+                  <button className="flex flex-row gap-2 items-center bg-[#F0FEEC] text-primary px-6 py-2 rounded-lg text-sm cursor-pointer border border-primary  hover:bg-transparent  ">
+                      <SquarePen className="w-5 h-5"/>
+                      <Link href={`/students/${student.id}/edit`}>Edit</Link>
+                  </button>
+                </div>
+                <div>
+                  <button className="flex flex-row gap-2 items-center px-6 py-2 rounded-lg text-sm cursor-pointer border border-E-gray-b  hover:bg-transparent  ">
+                      <Phone className="w-5 h-5"/>
+                      <Link target="_blank" href={`https://wa.me/${student?.phoneNumber}`}>Hubungi Murid</Link>
+                  </button>
+                </div>
+              </div>
+              </div>
              </div>
-           </div>
+            
+          
            <Info studentsInput={student} />
          </div>
        );

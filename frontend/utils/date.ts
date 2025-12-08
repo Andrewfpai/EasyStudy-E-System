@@ -47,7 +47,7 @@ export function formatForDisplay(isoString: string) {
   const seconds = String(date.getSeconds()).padStart(2, '0');
 
   return {
-    date: isoString?`${day}-${month}-${year}`:`-`,
+    date: isoString?`${day}/${month}/${year}`:`-`,
     time: `${hours}:${minutes}`,
   };
 }

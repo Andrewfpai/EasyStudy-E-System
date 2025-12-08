@@ -38,19 +38,16 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
   const [statusFilter, setStatusFilter] = useState<string[]>([]); 
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>({key:"id", direction:"asc"});
 
-  const statusOptions = [
-  { label: "Aktif", value: "ACTIVE" },
-  { label: "Nonaktif", value: "TEMP_INACTIVE" },
-  { label: "Berhenti", value: "OUT" },
-];
+  const statusOptions = ["Aktif", "Nonaktif", "Keluar"]
 
+  type StatusType = "Aktif" | "Nonaktif" | "Keluar";
   // const [search, setSearch] = useState(3);
 
-  const StatusAvatar = ({ status }) => {
+  const StatusAvatar = ({ status }: { status: StatusType }) => {
   const color =
-    status === "ACTIVE" ? "border-green-500"
-    : status === "TEMP_INACTIVE" ? "border-yellow-500"
-    : "border-red-500";
+    status === "Aktif" ? "border-primary"
+    : status === "Nonaktif" ? "border-secondary"
+    : "border-tertiary";
 
   return (
     <div className={`w-20 h-20 rounded-full border-2 ${color} flex items-center justify-center`}>
@@ -58,7 +55,7 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
     </div>
   );
 };
-
+console.log(students)
 
   const filteredStudents = students.filter(student => {
   // status filter
@@ -149,18 +146,18 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
           <div className="flex gap-4">
             {statusOptions.map((s) => (
               <label
-                key={s.value}
+                key={s}
                 className="flex items-center gap-2 cursor-pointer"
               >
                 <Checkbox
-                  checked={statusFilter.includes(s.value)}
+                  checked={statusFilter.includes(s)}
                   onCheckedChange={(checked) => {
-                    if (checked) setStatusFilter([...statusFilter, s.value])
-                    else setStatusFilter(statusFilter.filter((st) => st !== s.value))
+                    if (checked) setStatusFilter([...statusFilter, s])
+                    else setStatusFilter(statusFilter.filter((st) => st !== s))
                   }}
                   className="w-5 h-5 border-[1.5px] border-gray-300 data-[state=checked]:text-E-white data-[state=checked]:bg-primary cursor-pointer"
                 />
-                <span className="text-sm xl:text-base">{s.label}</span>
+                <span className="text-sm xl:text-base">{s}</span>
               </label>
             ))}
           </div>
@@ -175,7 +172,7 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
         {sortedStudents.map(student => (
           <div
             key={student.id}
-            className="flex flex-col items-center bg-[#F7F7F7] text-center rounded-2xl min-w-[175px] min-h-[300px] lg:min-h-[275px] p-6"
+            className="flex flex-col items-center bg-background text-center rounded-2xl min-w-[175px] min-h-[300px] lg:min-h-[275px] p-6"
           >
             {/* Avatar */}
             <StatusAvatar status={student.status} />
@@ -192,7 +189,7 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
             {/* Button */}
             
 
-            <Link href={`https://wa.me/${student.phoneNumber}`} className="py-3 min-w-full bg-E-gray-b rounded-lg text-xs xl:text-base font-semibold cursor-pointer border hover:border-E-gray-b hover:bg-transparent"> 
+            <Link target="_blank" href={`https://wa.me/${student.phoneNumber}`} className="py-3 min-w-full bg-E-gray-b rounded-lg text-xs xl:text-base font-semibold cursor-pointer border hover:border-E-gray-b hover:bg-transparent"> 
               <button >
                 Hubungi Murid
               </button>
