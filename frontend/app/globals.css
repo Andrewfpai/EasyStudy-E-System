@@ -76,7 +76,9 @@
 
   --E-gray: oklch(0.7858 0 0);                               /* (#B9B9B9) */
 
-
+  /*Dropdown Menu bg & text color*/
+  --popover: hsl(0 0% 100%);                                  /* bg color */
+  --popover-foreground: hsl(0 0% 13.7%);                      /* Text */
 
   --primary: oklch(0.6044 0.1622 149.75);                 /* Primary (#139B48) */
 
@@ -89,6 +91,13 @@
 
 
         /* optional red for destructive actions */
+  --muted: hsl(0 0% 88%);                 /* neutral subtle color */
+  --muted-foreground: hsl(0 0% 13.7%);
+
+  --accent: oklch(0.955 0.01 90);                /* same as background */
+  --accent-foreground: hsl(0 0% 13.7%);
+
+  --destructive: hsl(0 78% 50%);          /* optional red for destructive actions */
   --border: hsl(0 0% 85%);
   --input: hsl(0 0% 100%);
   --ring: hsl(172 84% 28%);
@@ -150,33 +159,13 @@
     @apply border-border outline-ring/50;
   }
   html {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-manrope), system-ui, sans-serif;
   }
   body {
     @apply bg-background text-foreground font-sans;
   }
 }
 /* In your global CSS file (globals.css) or component */
-.scrollbar-visible {
-  scrollbar-width: auto; /* Firefox */
-  scrollbar-color: #888 #f1f1f1; /* Firefox */
-}
-
-.scrollbar-visible::-webkit-scrollbar {
-  width: 12px; /* or 8px for thinner */
-  height: 12px; /* for horizontal scroll */
-}
-
-.scrollbar-visible::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 6px;
-}
-
-.scrollbar-visible::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 6px;
-}
-
-.scrollbar-visible::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.font-poppins {
+  font-family: var(--font-poppins), sans-serif;
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback,  } from "react";
 import { getStudents } from "../../../lib/api";
 import { useRouter } from "next/navigation";
 import {
@@ -29,20 +29,24 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { formatDateToISO, formatForDisplay } from "@/utils/date";
 import { CalendarDays, CalendarSearch, ListFilter, Search} from 'lucide-react';
+import { useDebounce } from "@/app/hooks/UseDebounce";
 
-
+let renderCount = 0;
 interface StudentTableProps {
   studentsInput: Student[];
 }
 
 export default function StudentTable({ studentsInput }: StudentTableProps) {
+  renderCount++
   const [students, setStudents] = useState<Student[]>(studentsInput);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search)
+
   const [filterOpen, setFilterOpen] = useState(false);
   const router = useRouter();
 
-  const [tokenUsedOp, setTokenUsedOp] = useState(">");
-  const [tokenUsedVal, setTokenUsedVal] = useState<number | null>(null);
+  // const [tokenUsedOp, setTokenUsedOp] = useState(">");
+  // const [tokenUsedVal, setTokenUsedVal] = useState<number | null>(null);
 
   const [tokenRemainingOp, setTokenRemainingOp] = useState(">");
   const [tokenRemainingVal, setTokenRemainingVal] = useState<number | null>(null);
@@ -57,93 +61,93 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
   const [open, setOpen] = useState(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
+  
 
   const filtersActive =
-    tokenUsedVal !== null ||
+    // tokenUsedVal !== null ||
     tokenRemainingVal !== null ||
     statusFilter.length > 0 ||
     joinedDateVal !== "";
 
 
-  const requestSort = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
+  const requestSort = useCallback((key: string) => {
+    setSortConfig(prev => {
+      if (prev?.key === key && prev.direction === "asc") {
+        return { key, direction: "desc" };
+      }
+      return { key, direction: "asc" };
+    });
+  }, []);
 
   
 
 
 
-  function compare(val: number, op: string, target: number) {
-    if (target == null) return true; // no filter applied
+  const compare = useCallback((val: number, op: string, target: number) => {
+    if (target == null) return true;
     switch (op) {
       case ">": return val > target;
       case "<": return val < target;
       case "=": return val === target;
       default: return true;
     }
-  }
+  }, []);
 
-  function compareDate(val: string, op: string, target: string) {
+  const compareDate = useCallback((val: string, op: string, target: string) => {
     if (!target) return true;
     const v = new Date(val);
     const t = new Date(target);
     if (isNaN(v.getTime()) || isNaN(t.getTime())) return true;
     return op === ">" ? v > t : v < t;
-  }
+  }, []);
 
-  const filteredStudents = students.filter(student => {
-    const matchesSearch =
-      student.name.toLowerCase().includes(search.toLowerCase()) ||
-      student.hanziName?.toLowerCase().includes(search.toLowerCase()) ||
-      student.pinyinName?.toLowerCase().includes(search.toLowerCase()) ||
-      String(student.phoneNumber).includes(search);
 
-    const matchesTokenUsed = compare(student.tokenUsed, tokenUsedOp, tokenUsedVal!);
-    const matchesTokenRemaining = compare(student.tokenRemaining, tokenRemainingOp, tokenRemainingVal!);
+  const filteredStudents = useMemo(() => {
+    return students.filter(student => {
+      const matchesSearch =
+        student.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        student.hanziName?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        student.pinyinName?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        String(student.phoneNumber).includes(debouncedSearch);
 
-    const matchesStatus = statusFilter.length === 0 || statusFilter.includes(student.status);
+      // const matchesTokenUsed = compare(student.tokenUsed, tokenUsedOp, tokenUsedVal!);
+      const matchesTokenRemaining = compare(student.tokenRemaining, tokenRemainingOp, tokenRemainingVal!);
+      const matchesStatus = statusFilter.length === 0 || statusFilter.includes(student.status);
+      const matchesJoinedDate = compareDate(student.joinedDate, joinedDateOp, joinedDateVal);
 
-    const matchesJoinedDate = compareDate(student.joinedDate, joinedDateOp, joinedDateVal);
+      return matchesSearch && matchesTokenRemaining && matchesStatus && matchesJoinedDate;
+    });
+  }, [students, debouncedSearch, tokenRemainingOp, tokenRemainingVal, statusFilter, joinedDateOp, joinedDateVal, compare, compareDate]);
 
-    // FINAL SEARCH RESULTS
-    return matchesSearch && matchesTokenUsed && matchesTokenRemaining && matchesStatus && matchesJoinedDate;
-  });
 
-  const sortedStudents = [...filteredStudents].sort((a, b) => {
-    if (!sortConfig) return 0;
+  const sortedStudents = useMemo(() => {
+    if (!sortConfig) return filteredStudents;
+    
+    return [...filteredStudents].sort((a, b) => {
+      const key = sortConfig.key as keyof Student;
+      const aVal = a[key];
+      const bVal = b[key];
 
-    // Make sure the key is a valid property of Student
-    const key = sortConfig.key as keyof Student;
+      if (key === "joinedDate") {
+        const aDate = new Date(aVal as string);
+        const bDate = new Date(bVal as string);
+        return sortConfig.direction === "asc"
+          ? aDate.getTime() - bDate.getTime()
+          : bDate.getTime() - aDate.getTime();
+      }
 
-    const aVal = a[key];
-    const bVal = b[key];
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
+      }
 
-    // Handle dates
-    if (key === "joinedDate") {
-      const aDate = new Date(aVal as string);
-      const bDate = new Date(bVal as string);
-      return sortConfig.direction === "asc"
-        ? aDate.getTime() - bDate.getTime()
-        : bDate.getTime() - aDate.getTime();
-    }
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        const comparison = aVal.localeCompare(bVal);
+        return sortConfig.direction === "asc" ? comparison : -comparison;
+      }
 
-    // Handle numbers
-    if (typeof aVal === "number" && typeof bVal === "number") {
-      return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal;
-    }
-
-    // Handle strings (default)
-    if (typeof aVal === "string" && typeof bVal === "string") {
-      const comparison = aVal.localeCompare(bVal);
-      return sortConfig.direction === "asc" ? comparison : -comparison;
-    }
-
-    return 0; // fallback
-  });
+      return 0;
+    });
+  }, [filteredStudents, sortConfig]);
 
 
 
@@ -154,15 +158,13 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
   //   });
   // }, []);
 
-  const resetFilters = () => {
-    setTokenUsedOp(">");
-    setTokenUsedVal(null);
+  const resetFilters = useCallback(() => {
     setTokenRemainingOp(">");
     setTokenRemainingVal(null);
     setStatusFilter([]);
     setJoinedDateOp(">");
     setJoinedDateVal("");
-  };
+  }, []);
 
   // const filteredStudents = students.filter(student =>
   //   student.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -173,9 +175,11 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
-  console.log("student:",students);
+  // console.log(`=== Render ${renderCount} ===`);
+  // console.log("search:", search);
+  // console.log("debouncedSearch:", debouncedSearch);
   return (
-    <div className="flex flex-col bg-white rounded-lg py-4 text-E-black ">
+    <div className="flex flex-col bg-white py-4 shadow-md rounded-2xl">
 
       <div className="flex flex-row items-center justify-between  mb-5 px-6 ">
         <div className="font-extrabold text-2xl">Data Murid</div>
@@ -206,7 +210,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
             transition-opacity duration-300 ease-in-out flex flex-col bg-white rounded-2xl p-6 space-y-6 
             absolute z-20 mt-4 shadow-lg -ml-36 min-w-72`}>
 
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <label className="font-bold">Token Terpakai</label>
               <div className="flex gap-2">
                 <DropdownMenu>
@@ -229,7 +233,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                   placeholder="Masukkan token terpakai"
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-col gap-2">
               <label className="font-bold">Token Sisa</label>
@@ -293,8 +297,8 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setJoinedDateOp(">")}>After</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setJoinedDateOp("<")}>Before</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setJoinedDateOp(">")}>Sebelum</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setJoinedDateOp("<")}>Sesudah</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -304,7 +308,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
                   <button
                     className={`${joinedDateVal?"":"text-E-gray"} text-sm col-span-3 flex items-center justify-between border border-E-gray-b rounded-lg px-3 py-1.5 text-left focus:outline-none focus:ring-2 focus:ring-primary`}
                   >
-                    {joinedDateVal ? joinedDateVal : "Pilih Tanggal"}
+                    {joinedDateVal ? formatForDisplay(joinedDateVal).date : "Pilih Tanggal"}
                     <CalendarSearch className="w-5 h-5 text-black"/>
                   </button>
                 </PopoverTrigger>
@@ -350,7 +354,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
           <div className="max-w-vw overflow-x-auto overflow-y-auto max-h-[500px] rounded-md">
             <Table className="w-full">
               <TableHeader className="text-E-gray ">
-                <TableRow className="">
+                <TableRow className="hover:bg-transparent">
                   <TableHead
                     className="px-6 py-3 text-center text-sm font-semibold  cursor-pointer" 
                     onClick={()=>{requestSort("id")}}

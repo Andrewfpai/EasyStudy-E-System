@@ -18,7 +18,7 @@ model Student {
   joinedDate      DateTime      @default(now())
   birthDate       DateTime?
   startLevel      String?       @default("Basic")
-  gender          String?       @default("laki-laki")
+  gender          String?       @default("Laki-laki")
   parentName      String?
   parentPhone     String?
   education       String?

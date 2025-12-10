@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getStudents, subtractStudentTokens } from "@/lib/api"; // import API
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { Search } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useDebounce } from "../hooks/UseDebounce";
 
 interface AbsensiProps {
   studentsInput: Student[];
@@ -28,16 +29,30 @@ export default function Absensi({studentsInput}:AbsensiProps) {
   const [tokenInput, setTokenInput] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const debouncedSearch = useDebounce(search, 500);
+
+  
 
 
-  const sortedStudents = [...students].sort((a, b) => {
+const filteredStudents = useMemo(() => {
+  const q = debouncedSearch.toLowerCase();
+
+  return students.filter(student => {
+    return (
+      student.name.toLowerCase().includes(q) ||
+      student.hanziName?.toLowerCase().includes(q) ||
+      student.pinyinName?.toLowerCase().includes(q)
+    );
+  });
+}, [students, debouncedSearch]);
+
+const sortedStudents = useMemo(() => {
+  return [...filteredStudents].sort((a, b) => {
     const aTime = new Date(a.updatedAt || 0).getTime();
     const bTime = new Date(b.updatedAt || 0).getTime();
-    return bTime - aTime; // newest first
+    return bTime - aTime;
   });
-
-
-
+}, [filteredStudents]);
   
 
   const toggleSelect = (student: Student) => {
@@ -49,41 +64,58 @@ export default function Absensi({studentsInput}:AbsensiProps) {
   };
 
   async function subtractTokens() {
-    if (!tokenInput || loading) return;
+    if (!tokenInput || loading || selectedStudents.length === 0) return;
+
+    // 1. Set loading immediately
     setLoading(true);
 
+    // 2. Apply optimistic UI updates
+    const optimisticUpdate = selectedStudents.map(student => ({
+      ...student,
+      tokenRemaining: student.tokenRemaining - tokenInput
+    }));
+
+    setStudents(prev =>
+      prev.map(student => 
+        optimisticUpdate.find(u => u.id === student.id) || student
+      )
+    );
+
+    // 3. Clear selection and input in UI
+    const selectedCopy = [...selectedStudents]; // keep for API
+    setSelectedStudents([]);
+    setTokenInput(null);
+
     try {
-      const updatedStudents = await Promise.all(
-        selectedStudents.map(async (student) => {
-
-          // call backend
-          const updated = await subtractStudentTokens(student.id, tokenInput);
-
-          // return merged updated student
-          return { ...student, tokenUsed: updated.tokenUsed, tokenRemaining: updated.tokenRemaining };
-        })
-      );
-
-      // replace updated students in main list
-      setStudents((prev) =>
-        prev.map((student) =>
-          updatedStudents.find((u) => u.id === student.id) || student
+      // 4. Call backend for each student in parallel
+      await Promise.all(
+        selectedCopy.map(student =>
+          subtractStudentTokens(student.id, tokenInput)
         )
       );
-
-      setSelectedStudents([]);
-      setTokenInput(null);
     } catch (err) {
       console.error("Error updating tokens:", err);
+
+      // 5. Revert UI on failure
+      setStudents(prev =>
+        prev.map(student =>
+          selectedCopy.find(s => s.id === student.id) || student
+        )
+      );
+      alert("Failed to subtract tokens for some students. Reverted changes.");
     } finally {
       setLoading(false);
     }
   }
 
+
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
+  // console.log("RERENDER")
+  // console.log("========")
+  // console.log("")
 
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-md py-4 text-E-black">
+    <div className="flex flex-col bg-white rounded-2xl shadow-md py-6">
       <div className="flex flex-col px-6">
         <div className="font-extrabold text-2xl">Catatan Kehadiran</div>
         
@@ -112,16 +144,15 @@ export default function Absensi({studentsInput}:AbsensiProps) {
             <div className="col-span-2">
               <button
                 className={`px-4 py-2.5 rounded-lg
-              ${tokenInput 
-                ? "bg-primary text-white cursor-pointer" 
-                : "bg-E-gray-b text-E-gray cursor-not-allowed"
-              }`}
+                  ${tokenInput && selectedStudents.length > 0
+                    ? "bg-primary text-white cursor-pointer" 
+                    : "bg-E-gray-b text-E-gray cursor-not-allowed"
+                }`}
                 onClick={() => subtractTokens()}
-                disabled={loading}
+                disabled={loading || selectedStudents.length === 0 || !tokenInput}
               >
                 Subtract Token
               </button>
-
             </div>
           </div>
 
