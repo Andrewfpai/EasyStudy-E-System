@@ -279,7 +279,7 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
           </MemoizedSelect>
         </div>
         
-
+ 
         {/* Alamat */}
         <div className="flex flex-col">
           <label className="mb-2 font-bold">Alamat Tempat Tinggal</label>
@@ -421,12 +421,9 @@ export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => 
 
       {showSuccess && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition transition-opacity duration-300">
-          <SuccessCard />
-          <button
-            onClick={() => setShowSuccess(false)}
-            className="absolute inset-0 w-full h-full cursor-pointer"
-            aria-label="Close modal"
-          />
+          <SuccessCard header="Pendaftaran Berhasil!"
+                body={`Murid baru sudah berhasil ditambahkan ke sistem.\nSilakan cek di halaman Semua Murid.`}
+                onClose={() => setShowSuccess(false)}/>
         </div>
       )}
       </div>

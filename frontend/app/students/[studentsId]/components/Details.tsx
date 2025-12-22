@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Student } from "@/app/types/student";
 import { formatForDisplay } from "@/utils/date";
 import { addTokensWithPayment } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { deleteStudentById } from "@/lib/api";
 
 interface DetailsProps {
   studentsInput: Student;
@@ -11,7 +13,7 @@ interface DetailsProps {
 export default function Details({ studentsInput }: DetailsProps) {
   const [student, setStudent] = useState<Student>(studentsInput);
   const [paymentUrl, setPaymentUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  
   const [tokenInput, setTokenInput] = useState<number | null>(null);
 
   // Map all fields with labels
@@ -41,23 +43,29 @@ export default function Details({ studentsInput }: DetailsProps) {
     { label: "Terakhir Diedit", value: student.updatedAt ? formatForDisplay(student.updatedAt)?.date : "-" },
   ];
 
-  const handleAddTokensWithPayment = async () => {
-    if (!tokenInput || loading) return;
+  const router = useRouter();
 
-    setLoading(true);
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this student? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
     try {
-      const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl);
-      setStudent(updated);
-      setTokenInput(null);
-      setPaymentUrl("");
-      alert("Tokens and payment recorded successfully!");
+      await deleteStudentById(student.id);
+
+      alert("Student deleted successfully.");
+
+      router.push("/students"); // go back to list
+
     } catch (err) {
       console.error(err);
-      alert("Failed to add tokens/payment.");
-    } finally {
-      setLoading(false);
+      alert("Failed to delete student.");
     }
   };
+
+  
  
   return (
     <div className="flex flex-col w-full ">
@@ -80,29 +88,16 @@ export default function Details({ studentsInput }: DetailsProps) {
           ))}
         </div>
 
-        <div className="mt-4 flex gap-2">
-          <input
-            type="number"
-            value={tokenInput ?? ""}
-            onChange={(e) => setTokenInput(e.target.value ? parseInt(e.target.value) : null)}
-            placeholder="Token amount"
-            className="border px-2 py-1 rounded w-32"
-          />
-          <input
-            type="text"
-            value={paymentUrl}
-            onChange={(e) => setPaymentUrl(e.target.value)}
-            placeholder="Payment image URL"
-            className="border px-2 py-1 rounded w-64"
-          />
-          <button
-            className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
-            onClick={handleAddTokensWithPayment}
-            disabled={loading}
-          >
-            Add Token & Payment
-          </button>
-        </div>
+        {/* Danger Zone */}
+          <div className="mt-10 pt-6 border-t border-red-300">
+            <button
+              onClick={handleDelete}
+              className="w-full py-3 rounded-lg font-semibold text-red-600 border border-red-500 hover:bg-red-600 hover:text-white transition"
+            >
+              Delete Student
+            </button>
+          </div>
+
       </div>
     </div>
   );

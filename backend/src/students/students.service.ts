@@ -35,7 +35,7 @@ export class StudentsService {
       },
     });
   }
-
+ 
   // Fetch a single student by ID
   async getStudentById(id: number) {
     return this.prisma.student.findUnique({
@@ -179,6 +179,12 @@ async addTokensWithPayment(studentId: number, tokenAmount: number, paymentUrl?: 
   return this.prisma.student.findUnique({
     where: { id: studentId },
     include: { tokenAddHistory: { orderBy: { createdAt: 'desc' } }, payments: true },
+  });
+}
+
+async deleteStudent(id: number) {
+  return this.prisma.student.delete({
+    where: { id },
   });
 }
 

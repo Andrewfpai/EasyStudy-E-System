@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Delete } from '@nestjs/common';
 import { StudentsService } from './students.service';
 
 @Controller('students')
@@ -40,12 +40,18 @@ export class StudentsController {
   }
 
   @Patch(':id/add-tokens-with-payment')
-async addTokensWithPayment(
-  @Param('id') id: string,
-  @Body() body: { tokenAmount: number; paymentUrl?: string }
-) {
-  return this.studentsService.addTokensWithPayment(+id, body.tokenAmount, body.paymentUrl);
-}
+  async addTokensWithPayment(
+    @Param('id') id: string,
+    @Body() body: { tokenAmount: number; paymentUrl?: string }
+  ) {
+    return this.studentsService.addTokensWithPayment(+id, body.tokenAmount, body.paymentUrl);
+  }
+
+  @Delete(':id')
+  async deleteStudent(@Param('id') id: string) {
+    return this.studentsService.deleteStudent(+id);
+  }
+
 
 
 }

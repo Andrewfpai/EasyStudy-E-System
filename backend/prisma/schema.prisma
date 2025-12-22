@@ -45,7 +45,7 @@ model PaymentProof {
   imageUrl  String
   createdAt DateTime @default(now())
 
-  student Student @relation(fields: [studentId], references: [id])
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model TokenUsedDate {
@@ -54,7 +54,7 @@ model TokenUsedDate {
   createdAt   DateTime @default(now())
   tokenAmount Int?
 
-  student Student @relation(fields: [studentId], references: [id])
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model TokenAddedDate {
@@ -62,7 +62,7 @@ model TokenAddedDate {
   studentId   Int
   createdAt   DateTime @default(now())
   tokenAmount Int?
-  student     Student  @relation(fields: [studentId], references: [id])
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 enum StudentStatus {

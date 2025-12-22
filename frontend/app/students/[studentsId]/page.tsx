@@ -28,6 +28,8 @@
      const params = await props.params;
      const { studentsId } = params;
 
+     const studentId = Number(params.studentsId);
+
      // Validate the ID before proceeding
      if (!studentsId || isNaN(parseInt(studentsId, 10))) {
        return <div>Invalid student ID.</div>;
@@ -35,7 +37,7 @@
 
      try {
        // Pass studentsId as string (getStudentById will parse it)
-       const student = await getStudentById(studentsId);
+       const student = await getStudentById(studentId);
 
        return (
          <div className="flex flex-col px-8 mt-4 text-E-black bg-background">
