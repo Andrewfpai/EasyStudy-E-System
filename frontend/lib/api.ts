@@ -3,7 +3,7 @@ import axios from "axios";
 import { Student } from "@/app/types/student";
 
 const api = axios.create({
-  baseURL: "https://dichotomous-catastrophically-shirly.ngrok-free.dev",
+  baseURL: "http://localhost:5000",
 });
 
 export const getStudents = async (): Promise<Student[]> => {
