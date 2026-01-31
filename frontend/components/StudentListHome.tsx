@@ -98,7 +98,7 @@ export default function StudentListHome({ studentsInput }: StudentListHomeProps)
   if (students.length === 0) return <p className="text-gray-500">No students found.</p>;
 
   return (
-    <div className="flex flex-col bg-[#FFFFFF] rounded-3xl py-6">
+    <div className="flex flex-col bg-[#FFFFFF] rounded-3xl py-6 mb-5">
       {/* Filter section */}
       <div className="flex flex-col mb-5 px-6">
         <div className="font-extrabold text-2xl">Pemantauan Murid</div>

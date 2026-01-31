@@ -115,7 +115,7 @@ const sortedStudents = useMemo(() => {
   // console.log("")
 
   return (
-    <div className="flex flex-col bg-white rounded-2xl shadow-md py-6">
+    <div className="flex flex-col bg-white rounded-2xl shadow-md py-6 mb-5">
       <div className="flex flex-col px-6">
         <div className="font-extrabold text-2xl">Catatan Kehadiran</div>
         
@@ -160,7 +160,7 @@ const sortedStudents = useMemo(() => {
       </div>
 
       <div className="overflow-auto flex-1 mt-5 px-6 ">
-        <div className="max-w-vw overflow-auto max-h-[500px] rounded-md">
+        <div className="max-w-vw overflow-auto rounded-md">
           <Table className="w-full">
             <TableHeader className="text-E-gray">
               <TableRow>

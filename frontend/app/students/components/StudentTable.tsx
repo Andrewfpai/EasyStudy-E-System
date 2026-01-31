@@ -179,9 +179,9 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
   // console.log("search:", search);
   // console.log("debouncedSearch:", debouncedSearch);
   return (
-    <div className="flex flex-col bg-white py-4 shadow-md rounded-2xl">
+    <div className="flex flex-col bg-white py-4 shadow-md rounded-2xl mb-5">
 
-      <div className="flex flex-row items-center justify-between  mb-5 px-6 ">
+      <div className="flex flex-row items-center justify-between mb-5 px-6 ">
         <div className="font-extrabold text-2xl">Data Murid</div>
         <div className="">
           <div className="flex flex-row gap-4">
@@ -351,7 +351,7 @@ export default function StudentTable({ studentsInput }: StudentTableProps) {
 
         
         <div className="overflow-auto flex-1 px-6 ">
-          <div className="max-w-vw overflow-x-auto overflow-y-auto max-h-[500px] rounded-md">
+          <div className="max-w-vw overflow-x-auto overflow-y-auto rounded-md">
             <Table className="w-full">
               <TableHeader className="text-E-gray ">
                 <TableRow className="hover:bg-transparent">
