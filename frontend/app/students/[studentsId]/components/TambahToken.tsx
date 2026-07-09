@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Student } from "@/app/types/student";
 import { addTokensWithPayment } from "@/lib/api";
-import SuccessCard from "@/app/add-new-student/SuccessCard";
+import SuccessCard from "@/shared/components/SuccessCard";
 
 interface TambahTokenProps {
   student: Student;

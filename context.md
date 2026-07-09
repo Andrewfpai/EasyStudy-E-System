@@ -1,0 +1,1 @@
+NAS TYPE: DXP 4800 Plus
