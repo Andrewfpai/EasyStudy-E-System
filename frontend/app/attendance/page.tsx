@@ -8,7 +8,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import Absensi from "./Absensi";
 import { getStudents } from "@/lib/api";
-import { Student } from "@/app/types/student";
+import { Student } from "@/types/student";
 
 
 export default async function Page() {

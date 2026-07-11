@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Student } from "@/app/types/student";
+import { Student } from "@/types/student";
 
 const api = axios.create({
   baseURL: "http://localhost:5000",

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { formatForDisplay } from "@/utils/date";
-import { Student } from "@/app/types/student";
+import { Student } from "@/types/student";
 
 import {
   Table,

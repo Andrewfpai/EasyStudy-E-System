@@ -1,7 +1,7 @@
-import DatePickerField from "@/features/students/components/StudentForm/DatePickerField";
-import SelectWithOtherField from "@/features/students/components/StudentForm/SelectWithOtherField";
-import NormalField from "@/features/students/components/StudentForm/NormalField";
-import SelectField from "@/features/students/components/StudentForm/SelectField";
+import DatePickerField from "@/features/students/form/DatePickerField";
+import SelectWithOtherField from "@/features/students/form/SelectWithOtherField";
+import NormalField from "@/features/students/form/NormalField";
+import SelectField from "@/features/students/form/SelectField";
 import type { RefObject } from "react";
 
 type StudentFormFieldsLeftProps = {

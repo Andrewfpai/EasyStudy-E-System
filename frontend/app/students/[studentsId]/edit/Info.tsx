@@ -2,7 +2,7 @@
 
 import { useRef, useState, memo } from "react"
 import { updateStudentData } from "@/lib/api"
-import { Student } from "@/app/types/student"
+import { Student } from "@/types/student"
 import { formatDateToUTC } from "@/utils/date"
 import {
   Select,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { CalendarArrowDown } from "lucide-react"
-import SuccessCard from "@/app/add-new-student/SuccessCard"
+import SuccessCard from "@/components/common/SuccessCard"
 
 interface InfoProps {
   student: Student

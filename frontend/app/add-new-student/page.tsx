@@ -1,6 +1,6 @@
  "use client"; // If needed for interactivity
 import { SidebarTrigger } from "@/components/ui/sidebar";
-  import StudentForm from "@/features/students/components/StudentForm/StudentForm";
+  import StudentForm from "@/features/students/form/StudentForm";
   export default function AddStudentPage() {
     const handleStudentAdded = () => {
       // Refresh student list or navigate (e.g., using router.push("/students"))

@@ -4,7 +4,7 @@ import { getStudents, subtractStudentTokens } from "@/lib/api"; // import API
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { formatDate } from "@/utils/date";
-import { Student } from "@/app/types/student";
+import { Student } from "@/types/student";
 import {
   Table,
   TableBody,

@@ -1,8 +1,8 @@
 
 // import SidebarWrapper from "@/components/sidebar/SidebarWrapper";
 // import AppSidebar from "@/components/Sidebar2";
-import AppSidebar from "@/components/sidebar/AppSidebar";
-import StudentListHome from "@/components/StudentListHome";
+import AppSidebar from "@/components/layout/AppSidebar/AppSidebar";
+import StudentListHome from "@/features/students/list/StudentListHome";
 import {  SidebarTrigger, SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { getStudents } from "@/lib/api";
 import Image from "next/image";

@@ -1,5 +1,5 @@
-import NormalField from "@/features/students/components/StudentForm/NormalField";
-import SelectWithOtherField from "@/features/students/components/StudentForm/SelectWithOtherField";
+import NormalField from "@/features/students/form/NormalField";
+import SelectWithOtherField from "@/features/students/form/SelectWithOtherField";
 import type { RefObject } from "react";
 
 type StudentFormFieldsRightProps = {

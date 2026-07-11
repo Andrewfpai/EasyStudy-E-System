@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Student } from "@/app/types/student";
+import { Student } from "@/types/student";
 import {
   DropdownMenu,
   DropdownMenuContent,

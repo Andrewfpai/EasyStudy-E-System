@@ -1,10 +1,10 @@
 "use client";
 import { addStudent } from "../../lib/api";
 import { formatDateToUTC } from "@/utils/date";
-import SuccessCard from "@/shared/components/SuccessCard";
-import { useStudentFormState } from "@/features/students/components/hooks/useStudentFormState";
-import StudentFormFieldLeft from "@/features/students/components/StudentForm/StudentFormFieldsLeft";
-import StudentFormFieldRight from "@/features/students/components/StudentForm/StudentFormFieldsRight";
+import SuccessCard from "@/components/common/SuccessCard";
+import { useStudentFormState } from "@/features/students/form/useStudentFormState";
+import StudentFormFieldLeft from "@/features/students/form/StudentFormFieldsLeft";
+import StudentFormFieldRight from "@/features/students/form/StudentFormFieldsRight";
 
 export default function StudentForm({ onStudentAdded }: { onStudentAdded: () => void }) {
   const state = useStudentFormState(onStudentAdded);

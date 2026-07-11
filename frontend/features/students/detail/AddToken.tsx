@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Student } from "@/types/student";
 import { addTokensWithPayment } from "@/lib/api";
@@ -7,7 +6,7 @@ import SuccessCard from "@/components/common/SuccessCard";
 
 interface TambahTokenProps {
   student: Student;
-  onUpdate?: (updatedStudent: Student) => void; // optional callback to update parent state
+  onUpdate?: (updatedStudent: Student) => void;
 }
 
 export default function TambahToken({ student, onUpdate }: TambahTokenProps) {
@@ -22,14 +21,12 @@ export default function TambahToken({ student, onUpdate }: TambahTokenProps) {
     setLoading(true);
     try {
       const updated = await addTokensWithPayment(student.id, tokenInput, paymentUrl);
-      onUpdate?.(updated); // update parent state if callback provided
+      onUpdate?.(updated);
       setTokenInput(null);
       setPaymentUrl("");
       setShowSuccess(true);
-      
     } catch (err) {
       console.error(err);
-  
     } finally {
       setLoading(false);
     }
@@ -62,19 +59,14 @@ export default function TambahToken({ student, onUpdate }: TambahTokenProps) {
       </button>
 
       {showSuccess && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition transition-opacity duration-300">
-            <SuccessCard
-                header="Token Berhasil Ditambahkan!"
-                body={`Token sudah berhasil ditambahkan ke sistem.\nSilakan cek di halaman Data Diri.`}
-                onClose={() => setShowSuccess(false)}
-                />
-            {/* <button
-                onClick={() => setShowSuccess(false)}
-                className="absolute inset-0 w-full h-full cursor-pointer"
-                aria-label="Close modal"
-            /> */}
-            </div>
-        )}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition transition-opacity duration-300">
+          <SuccessCard
+            header="Token Berhasil Ditambahkan!"
+            body={`Token sudah berhasil ditambahkan ke sistem.\nSilakan cek di halaman Data Diri.`}
+            onClose={() => setShowSuccess(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }

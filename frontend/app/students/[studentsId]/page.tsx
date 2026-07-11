@@ -3,25 +3,12 @@
    import { SidebarTrigger } from "@/components/ui/sidebar";
    import Link from "next/link";
    import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-   import Info from "./Info";
+   import StudentDetailTabs from "@/features/students/detail/StudentDetailTabs";
    import Image from 'next/image';
    import ProfilePicture from "@/assets/profilePicture.png";
    import { Phone, SquarePen } from "lucide-react";
 
    // Use the complete Student interface from lib/api.ts
-   interface Student {
-     id: number;
-     name: string;
-     hanziName: string | null;
-     pinyinName: string | null;
-     email: string;
-     address: string;
-     phoneNumber: number;
-     tokenUsed: number;
-     tokenRemaining: number;
-     joinedDate: string;
-     status: "ACTIVE" | "OUT" | "TEMP_INACTIVE";
-   }
 
    export default async function StudentPage(props: { params: Promise<{ studentsId: string }> }) {
      // Await the params Promise
@@ -91,7 +78,7 @@
              </div>
             
           
-           <Info studentsInput={student} />
+           <StudentDetailTabs studentsInput={student} />
          </div>
        );
      } catch (error) {
