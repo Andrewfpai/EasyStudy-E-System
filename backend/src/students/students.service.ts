@@ -188,4 +188,11 @@ async deleteStudent(id: number) {
   });
 }
 
+async updateProfilePicture(id: number, profilePictureUrl: string) {
+  return this.prisma.student.update({
+    where: { id },
+    data: { profilePictureUrl },
+  });
+}
+
 }

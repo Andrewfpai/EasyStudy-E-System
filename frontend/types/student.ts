@@ -28,4 +28,5 @@ export interface Student {
   payments?: any[];
   tokenUsageHistory?: any[];
   tokenAddHistory?: any[];
+  profilePictureUrl?: string | null;
 }

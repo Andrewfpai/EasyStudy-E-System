@@ -37,6 +37,8 @@ model Student {
   payments          PaymentProof[]
   tokenUsageHistory TokenUsedDate[]
   tokenAddHistory   TokenAddedDate[]
+
+  profilePictureUrl String?
 }
 
 model PaymentProof {

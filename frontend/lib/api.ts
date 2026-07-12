@@ -51,3 +51,14 @@ export const deleteStudentById = async (id: number): Promise<void> => {
   await api.delete<Student>(`/students/${id}`);
   
 };
+
+export async function uploadProfilePicture(studentId: number, file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.post(`/students/${studentId}/profile-picture`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return response.data;
+}

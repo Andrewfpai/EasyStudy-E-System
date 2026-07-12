@@ -6,7 +6,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { getStudents } from "@/lib/api";
-import StudentTable from "./components/StudentTable";
+import StudentTable from "@/features/students/table/StudentTable";
 
 export default async function Page() {
 

@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import Absensi from "./Absensi";
 import { getStudents } from "@/lib/api";
 import { Student } from "@/types/student";
+import AttendanceContainer from "@/features/students/attendance/AttendanceContainer";
 
 
 export default async function Page() {
@@ -23,7 +24,7 @@ export default async function Page() {
             <div className="font-semibold text-lg">Students Database</div>
         </div>
           
-        <Absensi studentsInput={student}/>
+        <AttendanceContainer studentsInput={student}/>
 
     </div>
   );

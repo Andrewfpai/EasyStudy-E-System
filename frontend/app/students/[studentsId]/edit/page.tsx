@@ -1,6 +1,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Info from "./Info";
 import { getStudentById } from "@/lib/api";
+import StudentEditForm from "@/features/students/edit/StudentEditForm";
 
 export default async function Page(props: any) {
   const params = await props.params; 
@@ -17,7 +18,7 @@ export default async function Page(props: any) {
         <div className="w-px h-5 bg-gray-300 mx-2"></div>
         <div className="font-semibold text-lg">Students Database</div>
       </div>
-      <Info student={student} />
+      <StudentEditForm student={student} />
     </div>
   );
 }
